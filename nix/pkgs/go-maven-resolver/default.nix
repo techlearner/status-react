@@ -2,7 +2,7 @@
 
 let
   inherit (lib) strings;
-in buildGoPackage rec {
+in buildGo114Package rec {
   pname = "go-maven-resolver";
   version = strings.substring 0 7 rev;
   owner = "status-im";
