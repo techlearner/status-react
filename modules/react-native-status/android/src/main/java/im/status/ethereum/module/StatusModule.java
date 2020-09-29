@@ -114,7 +114,6 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
     @ReactMethod
     public void enableNotifications() {
         this.newMessageSignalHandler = new NewMessageSignalHandler(reactContext);
-        Statusgo.startLocalNotifications();
     }
 
     @ReactMethod
@@ -1150,6 +1149,7 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
     public void startWallet() {
         Log.d(TAG, "StartWallet");
         Statusgo.startWallet();
+        Statusgo.startLocalNotifications();
     }
 
     @ReactMethod
