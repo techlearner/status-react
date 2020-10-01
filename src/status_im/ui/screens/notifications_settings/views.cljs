@@ -21,7 +21,7 @@
      [quo/list-header (i18n/label :t/local-notifications)]
      [quo/list-item
       {:size                :small
-       :title               (i18n/label :t/notification-transactions)
+       :title               (i18n/label :t/notifications-transactions)
        :accessibility-label :notifications-button
        :active              enabled
        :on-press            #(re-frame/dispatch

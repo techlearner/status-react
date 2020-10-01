@@ -31,8 +31,7 @@
                                                 (when icon
                                                   {:largeIconUrl (:uri (react/resolve-asset-source icon))}))))
 
-(defn create-notification [{{:keys [state from to value erc20 contract network]} :body
-                            :as                                                        data}]
+(defn create-notification [{{:keys [state from to value erc20 contract network]} :body}]
   (let [chain        (ethereum/chain-id->chain-keyword network)
         token        (if erc20
                        (get-in tokens/all-tokens-normalized [(keyword chain)

@@ -249,7 +249,7 @@
        (= (:identifier x) (:identifier y))))
 
 (defn- update-preference [all new]
-  (map (fn [el] (if (preference= el new) new el)) all))
+  (conj (filter (comp not (partial preference= new)) all) new))
 
 (fx/defn switch-transaction-notifications
   {:events [::switch-transaction-notifications]}
