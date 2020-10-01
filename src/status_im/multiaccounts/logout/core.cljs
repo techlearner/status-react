@@ -28,7 +28,7 @@
 (re-frame/reg-fx
  ::disable-local-notifications
  (fn []
-   (status/disable-notifications)))
+   (status/stop-local-notifications)))
 
 (fx/defn logout
   {:events [:logout :multiaccounts.logout.ui/logout-confirmed]}

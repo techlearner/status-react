@@ -43,7 +43,8 @@
             status-im.ui.screens.keycard.settings.subs
             status-im.ui.screens.keycard.pin.subs
             status-im.ui.screens.keycard.setup.subs
-            [status-im.chat.models.mentions :as mentions]))
+            [status-im.chat.models.mentions :as mentions]
+            [status-im.notifications.core :as notifications]))
 
 ;; TOP LEVEL ===========================================================================================================
 
@@ -208,6 +209,7 @@
 
 ;; push notifications
 (reg-root-key-sub :push-notifications/servers :push-notifications/servers)
+(reg-root-key-sub :push-notifications/preferences :push-notifications/preferences)
 
 ;;GENERAL ==============================================================================================================
 
@@ -2339,3 +2341,13 @@
  :<- [:networks/manage]
  (fn [manage]
    (not-any? :error (vals manage))))
+
+;; NOTIFICATIONS
+
+(re-frame/reg-sub
+ :notifications/wallet-transactions
+ :<- [:push-notifications/preferences]
+ (fn [pref]
+   (first (filter #(notifications/preference= % {:service    "wallet"
+                                                 :event      "transaction"
+                                                 :identifier "all"}) pref))))

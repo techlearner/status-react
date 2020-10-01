@@ -39,7 +39,7 @@
 (re-frame/reg-fx
  ::enable-local-notifications
  (fn []
-   (status/enable-notifications)))
+   (status/start-local-notifications)))
 
 (defn rpc->accounts [accounts]
   (reduce (fn [acc {:keys [chat type wallet] :as account}]
@@ -249,6 +249,7 @@
                  :on-success #(re-frame/dispatch [::protocol/initialize-protocol {:mailservers (or % [])}])}
                 {:method     "settings_getSettings"
                  :on-success #(re-frame/dispatch [::get-settings-callback %])}]}
+              (notifications/load-notification-preferences)
               (when save-password?
                 (keychain/save-user-password key-uid password))
               (keychain/save-auth-method key-uid (or new-auth-method auth-method keychain/auth-method-none)))))

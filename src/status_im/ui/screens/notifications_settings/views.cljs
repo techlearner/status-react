@@ -13,6 +13,21 @@
 
 (defonce server (reagent/atom ""))
 
+(defn local-notifications []
+  [:<>
+   (let [{:keys [enabled]} @(re-frame/subscribe [:notifications/wallet-transactions])]
+     [quo/separator {:color (:ui-02 @quo-colors/theme)
+                     :style {:margin-vertical 8}}]
+     [quo/list-header (i18n/label :t/local-notifications)]
+     [quo/list-item
+      {:size                :small
+       :title               (i18n/label :t/notification-transactions)
+       :accessibility-label :notifications-button
+       :active              enabled
+       :on-press            #(re-frame/dispatch
+                              [::notifications/switch-transaction-notifications enabled])
+       :accessory           :switch}])])
+
 (defn notifications-settings []
   (let [{:keys [remote-push-notifications-enabled?
                 push-notifications-block-mentions?
@@ -29,9 +44,8 @@
         :active              remote-push-notifications-enabled?
         :on-press            #(re-frame/dispatch [::notifications/switch (not remote-push-notifications-enabled?)])
         :accessory           :switch}]
-      [react/view {:height           1
-                   :background-color (:ui-02 @quo-colors/theme)
-                   :margin-vertical  8}]
+      [quo/separator {:color (:ui-02 @quo-colors/theme)
+                      :style {:margin-vertical 8}}]
       [quo/list-header (i18n/label :t/notifications-preferences)]
       [quo/list-item
        {:size                :small
@@ -50,7 +64,8 @@
                                   (not push-notifications-block-mentions?))
         :on-press            #(re-frame/dispatch
                                [::notifications/switch-block-mentions (not push-notifications-block-mentions?)])
-        :accessory           :switch}]]]))
+        :accessory           :switch}]
+      [local-notifications]]]))
 
 (defn notifications-advanced-settings []
   (let [{:keys [remote-push-notifications-enabled?
