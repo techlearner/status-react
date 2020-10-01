@@ -9,6 +9,7 @@
             [status-im.utils.utils :as utils]
             [status-im.utils.types :as types]
             [status-im.utils.money :as money]
+            [status-im.ethereum.core :as ethereum]
             [status-im.i18n :as i18n]
             [quo.platform :as platform]
             [re-frame.core :as re-frame]
@@ -30,9 +31,10 @@
                                                 (when icon
                                                   {:largeIconUrl (:uri (react/resolve-asset-source icon))}))))
 
-(defn create-notification [{{:keys [state from to value erc20 chain contract]
-                             :or   {chain "ropsten"}} :body}]
-  (let [token        (if erc20
+(defn create-notification [{{:keys [state from to value erc20 contract network]} :body
+                            :as                                                        data}]
+  (let [chain        (ethereum/chain-id->chain-keyword network)
+        token        (if erc20
                        (get-in tokens/all-tokens-normalized [(keyword chain)
                                                              (cstr/lower-case contract)]
                                default-erc20-token)
