@@ -750,10 +750,25 @@ RCT_EXPORT_METHOD(stopWallet) {
 RCT_EXPORT_METHOD(startWallet) {
 #if DEBUG
     NSLog(@"StartWallet() method called");
-                                #endif
-    StatusgoStartLocalNotifications();
+#endif
     StatusgoStartWallet();
 }
+
+RCT_EXPORT_METHOD(stopLocalNotifications) {
+#if DEBUG
+    NSLog(@"StopLocalNotifications() method called");
+#endif
+StatusgoStopLocalNotifications();
+}
+
+RCT_EXPORT_METHOD(startLocalNotifications) {
+#if DEBUG
+    NSLog(@"StartLocalNotifications() method called");
+#endif
+StatusgoStartLocalNotifications();
+}
+
+
 
 RCT_EXPORT_METHOD(setBlankPreviewFlag:(BOOL *)newValue)
 {

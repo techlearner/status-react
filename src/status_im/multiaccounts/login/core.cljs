@@ -36,6 +36,11 @@
  (fn [[key-uid account-data hashed-password]]
    (status/login key-uid account-data hashed-password)))
 
+(re-frame/reg-fx
+ ::enable-local-notifications
+ (fn []
+   (status/enable-notifications)))
+
 (defn rpc->accounts [accounts]
   (reduce (fn [acc {:keys [chat type wallet] :as account}]
             (if chat
@@ -180,18 +185,20 @@
 (fx/defn get-settings-callback
   {:events [::get-settings-callback]}
   [{:keys [db] :as cofx} settings]
-  (let [{:keys [notifications-enabled?]
+  (let [{:keys          [notifications-enabled?]
          :networks/keys [current-network networks]
-         :as settings}
+         :as            settings}
         (data-store.settings/rpc->settings settings)
         multiaccount (dissoc settings :networks/current-network :networks/networks)
-        network-id (str (get-in networks [current-network :config :NetworkId]))]
+        network-id   (str (get-in networks [current-network :config :NetworkId]))]
     (fx/merge cofx
               (cond-> {:db (-> db
                                (dissoc :multiaccounts/login)
                                (assoc :networks/current-network current-network
                                       :networks/networks networks
                                       :multiaccount multiaccount))
+                       ;; NOTE: Local notifications should be enabled only after wallet was started
+                       ::enable-local-notifications nil
                        ::initialize-wallet
                        (fn [accounts custom-tokens favourites]
                          (re-frame/dispatch [::initialize-wallet

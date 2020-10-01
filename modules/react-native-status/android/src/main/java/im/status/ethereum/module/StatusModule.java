@@ -122,7 +122,6 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
             newMessageSignalHandler.stop();
             newMessageSignalHandler = null;
         }
-        Statusgo.stopLocalNotifications();
     }
 
     private boolean checkAvailability() {
@@ -1149,6 +1148,17 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
     public void startWallet() {
         Log.d(TAG, "StartWallet");
         Statusgo.startWallet();
+    }
+
+    @ReactMethod
+    public void stopLocalNotifications() {
+        Log.d(TAG, "stopLocalNotifications");
+        Statusgo.stopLocalNotifications();
+    }
+
+    @ReactMethod
+    public void startLocalNotifications() {
+        Log.d(TAG, "startLocalNotifications");
         Statusgo.startLocalNotifications();
     }
 
