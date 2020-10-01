@@ -63,8 +63,10 @@
   [{:keys [db] :as cofx} accounts custom-tokens favourites new-account?]
   (fx/merge
    cofx
-   {:db (assoc db :multiaccount/accounts
-               (rpc->accounts accounts))}
+   {:db                          (assoc db :multiaccount/accounts
+                                        (rpc->accounts accounts))
+    ;; NOTE: Local notifications should be enabled only after wallet was started
+    ::enable-local-notifications nil}
    (wallet/initialize-tokens custom-tokens)
    (wallet/initialize-favourites favourites)
    (wallet/update-balances nil new-account?)
@@ -197,8 +199,6 @@
                                (assoc :networks/current-network current-network
                                       :networks/networks networks
                                       :multiaccount multiaccount))
-                       ;; NOTE: Local notifications should be enabled only after wallet was started
-                       ::enable-local-notifications nil
                        ::initialize-wallet
                        (fn [accounts custom-tokens favourites]
                          (re-frame/dispatch [::initialize-wallet
