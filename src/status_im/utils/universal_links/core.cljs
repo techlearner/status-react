@@ -85,7 +85,6 @@
   ;; TODO: Use only for testing
   {::acquisition/check-referrer referrer})
 
-
 (fx/defn handle-wallet-account [cofx {:keys [account]}]
   (navigation/navigate-to-cofx cofx
                                :tabs

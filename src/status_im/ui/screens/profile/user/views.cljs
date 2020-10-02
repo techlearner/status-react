@@ -67,7 +67,6 @@
 (defn content []
   (let [{:keys [preferred-name
                 mnemonic
-                notifications-enabled?
                 keycard-pairing]}
         @(re-frame/subscribe [:multiaccount])
         active-contacts-count @(re-frame/subscribe [:contacts/active-count])
@@ -129,23 +128,12 @@
        :accessibility-label :appearance-settings-button
        :chevron             true
        :on-press            #(re-frame/dispatch [:navigate-to :appearance])}]
-     (if platform/ios?
-       [quo/list-item
-        {:icon                :main-icons/notification
-         :title               (i18n/label :t/notifications)
-         :accessibility-label :notifications-settings-button
-         :chevron             true
-         :on-press            #(re-frame/dispatch [:navigate-to :notifications])}]
-       (when (and platform/android?
-                  config/local-notifications?)
-         [quo/list-item
-          {:icon                :main-icons/notification
-           :title               (i18n/label :t/notifications)
-           :accessibility-label :notifications-settings-button
-           :active              notifications-enabled?
-           :on-press            #(re-frame/dispatch
-                                  [::notifications/switch (not notifications-enabled?)])
-           :accessory           :switch}]))
+     [quo/list-item
+      {:icon                :main-icons/notification
+       :title               (i18n/label :t/notifications)
+       :accessibility-label :notifications-settings-button
+       :chevron             true
+       :on-press            #(re-frame/dispatch [:navigate-to :notifications])}]
      [quo/list-item
       {:icon                :main-icons/mobile
        :title               (i18n/label :t/sync-settings)
