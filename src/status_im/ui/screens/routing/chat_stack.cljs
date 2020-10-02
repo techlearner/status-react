@@ -2,7 +2,6 @@
   (:require [status-im.ui.screens.routing.core :as navigation]
             [status-im.ui.screens.home.views :as home]
             [status-im.ui.screens.chat.views :as chat]
-            [status-im.ui.screens.profile.contact.views :as profile.contact]
             [status-im.ui.screens.group.views :as group]
             [status-im.ui.screens.profile.group-chat.views :as profile.group-chat]
             [status-im.chat.models :as chat.models]
@@ -21,9 +20,6 @@
      :component home/home}
     {:name      :chat
      :component chat/chat}
-    {:name      :profile
-     :insets    {:top false}
-     :component profile.contact/profile}
     {:name      :group-chat-profile
      :insets    {:top false}
      :component profile.group-chat/group-chat-profile}

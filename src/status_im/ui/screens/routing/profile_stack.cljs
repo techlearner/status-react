@@ -65,9 +65,6 @@
      :component ens/name-details}
     {:name      :blocked-users-list
      :component contacts-list/blocked-users-list}
-    {:name      :profile
-     :insets    {:top false}
-     :component profile.contact/profile}
     {:name      :bootnodes-settings
      :component bootnodes-settings/bootnodes-settings}
     {:name      :installations

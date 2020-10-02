@@ -63,10 +63,7 @@
                                                :params {:screen :my-profile}})
 
       (and public-key (not own))
-      (navigation/navigate-to-cofx (assoc-in cofx [:db :contacts/identity] public-key)
-                                   :tabs
-                                   {:screen :chat-stack
-                                    :params {:screen :profile}})
+      (navigation/navigate-to-cofx (assoc-in cofx [:db :contacts/identity] public-key) :profile nil)
 
       :else
       {:utils/show-popup {:title      (i18n/label :t/unable-to-read-this-code)
