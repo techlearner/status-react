@@ -13,16 +13,23 @@
             [status-im.i18n :as i18n]
             [quo.platform :as platform]
             [re-frame.core :as re-frame]
-            [status-im.ui.components.react :as react]))
+            [status-im.ui.components.react :as react]
+            [cljs-bean.core :as bean]))
 
 (def default-erc20-token
   {:symbol   :ERC20
    :decimals 18
    :name     "ERC20"})
 
-(defn local-push-ios [{:keys [title message]}]
+(def notification-event-ios "localNotification")
+(def notification-event-android "remoteNotificationReceived")
+
+(defn local-push-ios [{:keys [title message user-info]}]
   (.presentLocalNotification pn-ios #js {:alertBody  message
-                                         :alertTitle title}))
+                                         :alertTitle title
+                                         ;; NOTE: Use a special type to hide in Obj-C code other notifications
+                                         :userInfo   (bean/->js (merge user-info
+                                                                       {:notificationType "local-notification"}))}))
 
 (defn local-push-android [{:keys [title message icon]}]
   (pn-android/present-local-notification (merge {:channelId "status-im-notifications"
@@ -30,6 +37,22 @@
                                                  :message   message}
                                                 (when icon
                                                   {:largeIconUrl (:uri (react/resolve-asset-source icon))}))))
+
+(defn handle-notification-press [{deep-link :deepLink}]
+  (when deep-link
+    (re-frame/dispatch [:universal-links/handle-url deep-link])))
+
+(defn listen-notifications []
+  (if platform/ios?
+    (.addEventListener ^js pn-ios
+                       notification-event-ios
+                       (fn [notification]
+                         (handle-notification-press (bean/bean (.getData ^js notification)))))
+    (.addListener ^js react/device-event-emitter
+                  notification-event-android
+                  (fn [^js data]
+                    (when (and data (.-dataJSON data))
+                      (handle-notification-press (types/json->clj (.-dataJSON data))))))))
 
 (defn create-notification [{{:keys [state from to value erc20 contract network]} :body}]
   (let [chain        (ethereum/chain-id->chain-keyword network)

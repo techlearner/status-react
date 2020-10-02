@@ -85,6 +85,14 @@
   ;; TODO: Use only for testing
   {::acquisition/check-referrer referrer})
 
+
+(fx/defn handle-wallet-account [cofx {:keys [account]}]
+  (navigation/navigate-to-cofx cofx
+                               :tabs
+                               {:screen :wallet-stack
+                                :params {:screen  :wallet-account
+                                         :address account}}))
+
 (defn handle-not-found [full-url]
   (log/info "universal-links: no handler for " full-url))
 
@@ -99,13 +107,14 @@
   {:events [::match-value]}
   [cofx url {:keys [type] :as data}]
   (case type
-    :group-chat   (handle-group-chat cofx data)
-    :public-chat  (handle-public-chat cofx data)
-    :private-chat (handle-private-chat cofx data)
-    :contact      (handle-view-profile cofx data)
-    :browser      (handle-browse cofx data)
-    :eip681       (handle-eip681 cofx data)
-    :referrals    (handle-referrer-url cofx data)
+    :group-chat     (handle-group-chat cofx data)
+    :public-chat    (handle-public-chat cofx data)
+    :private-chat   (handle-private-chat cofx data)
+    :contact        (handle-view-profile cofx data)
+    :browser        (handle-browse cofx data)
+    :eip681         (handle-eip681 cofx data)
+    :referrals      (handle-referrer-url cofx data)
+    :wallet-account (handle-wallet-account cofx data)
     (handle-not-found url)))
 
 (fx/defn route-url

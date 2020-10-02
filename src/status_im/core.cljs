@@ -88,6 +88,7 @@
   (when platform/android?
     (status/set-soft-input-mode status/adjust-resize))
   (.registerComponent ^js app-registry "StatusIm" #(reagent/reactify-component root))
+  (notifications/listen-notifications)
   (when platform/android?
     (.registerHeadlessTask ^js app-registry "LocalNotifications" notifications/handle))
   (snoopy/subscribe!))

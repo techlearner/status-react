@@ -528,8 +528,9 @@
  :account-by-address
  :<- [:multiaccount/accounts]
  (fn [accounts [_ address]]
-   (some #(when (= (string/lower-case (:address %))
-                   (string/lower-case address)) %) accounts)))
+   (when (and (string? address))
+     (some #(when (= (string/lower-case (:address %))
+                     (string/lower-case address)) %) accounts))))
 
 (re-frame/reg-sub
  :multiple-multiaccounts?
