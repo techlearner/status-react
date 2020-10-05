@@ -1,5 +1,6 @@
 (ns status-im.utils.universal-links.core
   (:require [goog.string :as gstring]
+            [clojure.string :as string]
             [re-frame.core :as re-frame]
             [status-im.multiaccounts.model :as multiaccounts.model]
             [status-im.chat.models :as chat]
@@ -85,12 +86,19 @@
   ;; TODO: Use only for testing
   {::acquisition/check-referrer referrer})
 
-(fx/defn handle-wallet-account [cofx {:keys [account]}]
-  (navigation/navigate-to-cofx cofx
-                               :tabs
-                               {:screen :wallet-stack
-                                :params {:screen  :wallet-account
-                                         :address account}}))
+(defn existing-account? [{:keys [db]} address]
+  (when address
+    (some #(when (= (string/lower-case (:address %))
+                    (string/lower-case address)) %)
+          (:multiaccount/accounts db))))
+
+(fx/defn handle-wallet-account [cofx {address :account}]
+  (when-let [account (existing-account? cofx address)]
+    (navigation/navigate-to-cofx cofx
+                                 :tabs
+                                 {:screen :wallet-stack
+                                  :params {:screen :wallet-account
+                                           :params {:address account}}})))
 
 (defn handle-not-found [full-url]
   (log/info "universal-links: no handler for " full-url))

@@ -3,7 +3,6 @@
             [reagent.core :as reagent]
             [status-im.i18n :as i18n]
             [quo.core :as quo]
-            [status-im.notifications.core :as notifications]
             [status-im.ui.components.colors :as colors]
             [status-im.multiaccounts.core :as multiaccounts]
             [status-im.ui.components.common.common :as components.common]

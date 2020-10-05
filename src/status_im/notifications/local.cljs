@@ -31,15 +31,20 @@
                                          :userInfo   (bean/->js (merge user-info
                                                                        {:notificationType "local-notification"}))}))
 
-(defn local-push-android [{:keys [title message icon]}]
+(defn local-push-android [{:keys [title message icon user-info]}]
   (pn-android/present-local-notification (merge {:channelId "status-im-notifications"
                                                  :title     title
                                                  :message   message}
+                                                (when user-info
+                                                  {:userInfo (bean/->js user-info)})
                                                 (when icon
                                                   {:largeIconUrl (:uri (react/resolve-asset-source icon))}))))
 
-(defn handle-notification-press [{deep-link :deepLink}]
-  (when deep-link
+(defn handle-notification-press [{{deep-link :deepLink} :userInfo
+                                  interaction           :userInteraction}]
+  (when (and deep-link
+             (or platform/ios?
+                 (and platform/android? interaction)))
     (re-frame/dispatch [:universal-links/handle-url deep-link])))
 
 (defn listen-notifications []
@@ -47,7 +52,7 @@
     (.addEventListener ^js pn-ios
                        notification-event-ios
                        (fn [notification]
-                         (handle-notification-press (bean/bean (.getData ^js notification)))))
+                         (handle-notification-press {:userInfo (bean/bean (.getData ^js notification))})))
     (.addListener ^js react/device-event-emitter
                   notification-event-android
                   (fn [^js data]
