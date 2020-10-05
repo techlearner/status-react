@@ -171,7 +171,7 @@
 
 (defn match-wallet-account [{:keys [account]}]
   {:type    :wallet-account
-   :account account})
+   :account (when account (string/lower-case account))})
 
 (defn handle-uri [chain uri cb]
   (let [{:keys [handler route-params query-params]} (match-uri uri)]

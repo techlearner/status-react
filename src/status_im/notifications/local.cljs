@@ -54,38 +54,39 @@
                     (when (and data (.-dataJSON data))
                       (handle-notification-press (types/json->clj (.-dataJSON data))))))))
 
-(defn create-notification [{{:keys [state from to value erc20 contract network]} :body}]
-  (let [chain        (ethereum/chain-id->chain-keyword network)
-        token        (if erc20
-                       (get-in tokens/all-tokens-normalized [(keyword chain)
-                                                             (cstr/lower-case contract)]
-                               default-erc20-token)
-                       (tokens/native-currency (keyword chain)))
-        amount       (money/wei->ether (decode/uint value))
-        account-to   @(re-frame/subscribe [:account-by-address to])
-        account-from @(re-frame/subscribe [:account-by-address from])
-        to           (or (:name account-to) (utils/get-shortened-address to))
-        from         (or (:name account-from) (utils/get-shortened-address from))
-        title        (case state
-                       "inbound"  (i18n/label :t/push-inbound-transaction {:value    amount
-                                                                           :currency (:symbol token)})
-                       "outbound" (i18n/label :t/push-outbound-transaction {:value    amount
-                                                                            :currency (:symbol token)})
-                       "failed"   (i18n/label :t/push-failed-transaction {:value    amount
+(defn create-notification [{{:keys [state from to fromAccount toAccount value erc20 contract network]}
+                            :body
+                            :as notification}]
+  (let [chain       (ethereum/chain-id->chain-keyword network)
+        token       (if erc20
+                      (get-in tokens/all-tokens-normalized [(keyword chain)
+                                                            (cstr/lower-case contract)]
+                              default-erc20-token)
+                      (tokens/native-currency (keyword chain)))
+        amount      (money/wei->ether (decode/uint value))
+        to          (or (:name toAccount) (utils/get-shortened-address to))
+        from        (or (:name fromAccount) (utils/get-shortened-address from))
+        title       (case state
+                      "inbound"  (i18n/label :t/push-inbound-transaction {:value    amount
                                                                           :currency (:symbol token)})
-                       nil)
-        description  (case state
-                       "inbound"  (i18n/label :t/push-inbound-transaction-body {:from from
+                      "outbound" (i18n/label :t/push-outbound-transaction {:value    amount
+                                                                           :currency (:symbol token)})
+                      "failed"   (i18n/label :t/push-failed-transaction {:value    amount
+                                                                         :currency (:symbol token)})
+                      nil)
+        description (case state
+                      "inbound"  (i18n/label :t/push-inbound-transaction-body {:from from
+                                                                               :to   to})
+                      "outbound" (i18n/label :t/push-outbound-transaction-body {:from from
                                                                                 :to   to})
-                       "outbound" (i18n/label :t/push-outbound-transaction-body {:from from
-                                                                                 :to   to})
-                       "failed"   (i18n/label :t/push-failed-transaction-body {:value    amount
-                                                                               :currency (:symbol token)
-                                                                               :to       to})
-                       nil)]
-    {:title   title
-     :icon    (get-in token [:icon :source])
-     :message description}))
+                      "failed"   (i18n/label :t/push-failed-transaction-body {:value    amount
+                                                                              :currency (:symbol token)
+                                                                              :to       to})
+                      nil)]
+    {:title     title
+     :icon      (get-in token [:icon :source])
+     :user-info notification
+     :message   description}))
 
 (re-frame/reg-fx
  ::local-push-ios
