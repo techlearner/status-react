@@ -74,6 +74,9 @@ let
   compilerFlags = if isAndroid then
     "-isysroot ${ANDROID_NDK_HOME}/sysroot -target ${androidTarget}${api} -fPIC"
     else if isIOS then
+    # TODO The conditional for -miphoneos-version-min=8.0 is required,
+    # otherwise Nim will complain that thread-local storage is not supported for the current target
+    # when expanding 'NIM_THREADVAR' macro
     "-isysroot $(xcrun --sdk ${iosSdk} --show-sdk-path) -fembed-bitcode -arch ${iosArch} -I${iosIncludes} ${if arch == "arm" then "" else "-miphoneos-version-min=8.0"}"
     else throw "Unsupported platform!";
 

@@ -99,6 +99,7 @@ in stdenv.mkDerivation rec {
   configurePhase = ''
     export PATH=${pkgs.perl}/bin:$PATH
     ${compilerVars}
+    patchShebangs .
 	  ./Configure ${configureArch} ${configureFlags} CFLAGS="${compilerFlags}" LDFLAGS="${linkerFlags}" -no-shared
   '';
 

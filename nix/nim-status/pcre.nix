@@ -114,6 +114,7 @@ in stdenv.mkDerivation rec {
 
   configurePhase = ''
     ${compilerVars}
+    patchShebangs .
 	  ./configure --enable-utf --with-sysroot=${isysroot} --host=${hostFlag} CFLAGS="${compilerFlags}" LDFLAGS="${linkerFlags}" --disable-shared --disable-cpp
   '';
 
