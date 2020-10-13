@@ -11,7 +11,7 @@ in rec {
   srcRaw = pkgs.fetchgit {
     url = "https://github.com/status-im/nim-status";
     rev = "03cac5fa6d7fbd45b16307dd22d461a48585c8a9";
-    sha256 = "1q3zgl38kl526sqwbxysg66zh872lhw9d50fc52qnpskpzqlwkr2";
+    sha256 = "0lf3cs461c1xkqgbcn3p39r6qgd4gv5hk6c698ibmvv6ky1yaay5";
     leaveDotGit = true;
     deepClone = true;
     fetchSubmodules = true;
