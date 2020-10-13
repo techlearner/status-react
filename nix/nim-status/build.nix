@@ -216,6 +216,7 @@ in stdenv.mkDerivation rec {
 
     ${createNimbleLink}
 
+    patchShebangs .
   '';
 
 
