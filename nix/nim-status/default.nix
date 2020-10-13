@@ -8,23 +8,32 @@ let
   callPackage = newScope {};
 
 in rec {
-  srcRaw = stdenv.mkDerivation rec {
-    name = "nim-status-src-builder";
-    buildInputs = [ pkgs.coreutils pkgs.cacert pkgs.git ];
+  srcRaw = pkgs.fetchgit {
+    url = "https://github.com/status-im/nim-status";
     rev = "03cac5fa6d7fbd45b16307dd22d461a48585c8a9";
-    GIT_SSL_CAINFO = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
-    builder = writeScript "nim-status-src-builder.sh"
-    ''
-      export PATH=${pkgs.coreutils}/bin:${pkgs.git}/bin:$PATH
-      git clone https://github.com/status-im/nim-status $out
-      cd $out
-      git checkout ${rev}
-    	git submodule update --init --recursive || true
-	    git submodule sync --quiet --recursive
-	    git submodule update --init --recursive
-    '';
-
+    sha256 = "1q3zgl38kl526sqwbxysg66zh872lhw9d50fc52qnpskpzqlwkr2";
+    leaveDotGit = true;
+    deepClone = true;
+    fetchSubmodules = true;
   };
+
+  # srcRaw = stdenv.mkDerivation rec {
+  #   name = "nim-status-src-builder";
+  #   buildInputs = [ pkgs.coreutils pkgs.cacert pkgs.git ];
+  #   rev = "03cac5fa6d7fbd45b16307dd22d461a48585c8a9";
+  #   GIT_SSL_CAINFO = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+  #   builder = writeScript "nim-status-src-builder.sh"
+  #   ''
+  #     export PATH=${pkgs.coreutils}/bin:${pkgs.git}/bin:$PATH
+  #     git clone https://github.com/status-im/nim-status $out
+  #     cd $out
+  #     git checkout ${rev}
+  #   	git submodule update --init --recursive || true
+	    # git submodule sync --quiet --recursive
+	    # git submodule update --init --recursive
+  #   '';
+
+  # };
 
   openssl-android-x86 = callPackage ./openssl.nix { platform = "android"; arch = "386"; };
   openssl-ios-x86 = callPackage ./openssl.nix { platform = "ios"; arch = "386"; };

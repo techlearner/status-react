@@ -3,6 +3,7 @@
 , xcodeWrapper
 , srcRaw
 , writeScript
+, writeTextFile
 , androidPkgs
 , git 
 , platform ? "android"
@@ -160,6 +161,31 @@ let
   nimHostOs = if osId == "darwin" then "Darwin"
               else if osId == "linux" then "Linux"
               else "Windows_NT";
+
+  createNimbleLink = writeTextFile {
+    name = "createNimbleLink.sh";
+    text = ''
+    mkdir -p vendor/.nimble/pkgs
+
+    curdir=`pwd`
+    for dir in vendor/*/;
+    do
+      baseDirName=`basename ''${dir}`
+      dirName=vendor/.nimble/pkgs/$baseDirName-\#head
+      echo $dirName
+      mkdir -p $dirName
+
+      packageDir="''${curdir}/vendor/''${baseDirName}"
+      if [ -d "''${packageDir}/src" ]; then
+        packageDir="''${packageDir}/src"
+      fi
+      echo "''${packageDir}" > ''${dirName}/''${baseDirName}.nimble-link
+      echo "''${packageDir}" >> ''${dirName}/''${baseDirName}.nimble-link
+    done
+    '';
+    executable = true;
+  };
+
 in stdenv.mkDerivation rec {
   pname = "nim-status";
   version = lib.strings.substring 0 7 src.rev;
@@ -186,7 +212,9 @@ in stdenv.mkDerivation rec {
     echo 'switch("passL", "${linkerFlags}")' >> config.nims
     echo 'switch("cpu", "${nimCpu}")' >> config.nims
     echo 'switch("os", "${nimPlatform}")' >> config.nims
-    
+
+    ${createNimbleLink}
+
   '';
 
 
