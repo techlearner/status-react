@@ -94,6 +94,7 @@ let
       export AR=${androidToolPathPrefix}-ar
       export AS=${androidToolPathPrefix}-as
       export NM=${androidToolPathPrefix}-nm
+      export CC=clang
       export RANLIB=${androidToolPathPrefix}-ranlib
 
       # This is important, otherwise Nim might not use proper tooling

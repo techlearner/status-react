@@ -87,6 +87,7 @@ let
       export AS=${androidToolPathPrefix}-as
       export LD=${androidToolPathPrefix}-ld
       export NM=${androidToolPathPrefix}-nm
+      export CC=clang
       export RANLIB=${androidToolPathPrefix}-ranlib
     ''
     else if isIOS then
