@@ -115,7 +115,6 @@ let
       export LDFLAGS="${linkerFlags}"
     ''
     else throw "Unsupported platform!";
-
  
   # src = pkgs.fetchgit {
   #   url = "https://github.com/status-im/nim-status";
