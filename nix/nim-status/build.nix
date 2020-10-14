@@ -223,7 +223,7 @@ in stdenv.mkDerivation rec {
   buildPhase = ''
     ${compilerVars}
 
-    make CFLAGS="${compilerFlags}" LDFLAGS="${linkerFlags}" CC=clang OS=${nimHostOs} USE_SYSTEM_NIM=1 V=3
+    make CC=clang CFLAGS="${compilerFlags}" LDFLAGS="${linkerFlags}" CC=clang OS=${nimHostOs} USE_SYSTEM_NIM=1 V=3
    '';
 
   installPhase = ''
