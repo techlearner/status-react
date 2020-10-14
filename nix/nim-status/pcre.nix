@@ -125,7 +125,8 @@ in stdenv.mkDerivation rec {
   '';
 
   installPhase = ''
-    mkdir -p $out
+    mkdir -p $out/include
     cp .libs/libpcre.a $out
+    cp pcre.h $out/include
   '';
 }

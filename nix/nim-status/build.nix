@@ -3,6 +3,7 @@
 , xcodeWrapper
 , srcRaw
 , writeScript
+, pcre
 , writeTextFile
 , androidPkgs
 , git 
@@ -73,7 +74,7 @@ let
 
   };
   compilerFlags = if isAndroid then
-    "-isysroot ${ANDROID_NDK_HOME}/sysroot -target ${androidTarget}${api} -fPIC"
+    "--sysroot ${ANDROID_NDK_HOME}/sysroot -target ${androidTarget}${api} -fPIC -I ${pcre}/include"
     else if isIOS then
     # TODO The conditional for -miphoneos-version-min=8.0 is required,
     # otherwise Nim will complain that thread-local storage is not supported for the current target

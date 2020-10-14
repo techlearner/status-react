@@ -55,13 +55,43 @@ in rec {
 
 
 
-  android-x86 = callPackage ./build.nix { inherit srcRaw; platform = "android"; arch = "386"; };
-  android-arm = callPackage ./build.nix { inherit srcRaw; platform = "androideabi"; arch = "arm"; };
-  android-arm64 = callPackage ./build.nix { inherit srcRaw; platform = "android"; arch = "arm64"; };
+  android-x86 = callPackage ./build.nix { 
+    inherit srcRaw; 
+    platform = "android"; 
+    arch = "386"; 
+    pcre = pcre-android-x86;
+  };
+  android-arm = callPackage ./build.nix { 
+    inherit srcRaw;
+    platform = "androideabi"; 
+    arch = "arm";
+    pcre = pcre-android-arm;
+  };
+  android-arm64 = callPackage ./build.nix {
+    inherit srcRaw; 
+    platform = "android"; 
+    arch = "arm64";
+    pcre = pcre-android-arm64;
+  };
 
-  ios-x86 = callPackage ./build.nix { inherit srcRaw; platform = "ios"; arch = "386"; };
-  ios-arm = callPackage ./build.nix { inherit srcRaw; platform = "ios"; arch = "arm"; };
-  ios-arm64 = callPackage ./build.nix { inherit srcRaw; platform = "ios"; arch = "arm64"; };
+  ios-x86 = callPackage ./build.nix { 
+    inherit srcRaw; 
+    platform = "ios"; 
+    arch = "386"; 
+    pcre = pcre-ios-x86;
+  };
+  ios-arm = callPackage ./build.nix {
+    inherit srcRaw; 
+    platform = "ios"; 
+    arch = "arm"; 
+    pcre = pcre-ios-arm;
+  };
+  ios-arm64 = callPackage ./build.nix {
+    inherit srcRaw; 
+    platform = "ios"; 
+    arch = "arm64"; 
+    pcre = pcre-ios-arm64;
+  };
 
   android = stdenv.mkDerivation {
     name = "nim-status-android-builder";
