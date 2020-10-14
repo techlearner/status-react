@@ -209,6 +209,10 @@ in stdenv.mkDerivation rec {
     sed -E -i 's|^(.*)-DNATPMP_MAX_RETRIES=4(.*)|\1 -DNATPMP_MAX_RETRIES=4 $(CFLAGS)\2|g' vendor/nim-waku/vendor/nimbus-build-system/makefiles/targets.mk
 
 
+    sed -E -i 's/^CC := gcc$/CC := clang/g' vendor/nimbus-build-system/makefiles/variables.mk
+    sed -E -i 's/^CC := gcc$/CC := clang/g' vendor/nim-waku/vendor/nimbus-build-system/makefiles/variables.mk
+
+
     echo 'switch("passC", "${compilerFlags}")' >> config.nims
     echo 'switch("passL", "${linkerFlags}")' >> config.nims
     echo 'switch("cpu", "${nimCpu}")' >> config.nims
@@ -223,7 +227,7 @@ in stdenv.mkDerivation rec {
   buildPhase = ''
     ${compilerVars}
 
-    make CC=clang CFLAGS="${compilerFlags}" LDFLAGS="${linkerFlags}" CC=clang OS=${nimHostOs} USE_SYSTEM_NIM=1 V=3
+    make CFLAGS="${compilerFlags}" LDFLAGS="${linkerFlags}" CC=clang OS=${nimHostOs} USE_SYSTEM_NIM=1 V=3
    '';
 
   installPhase = ''
