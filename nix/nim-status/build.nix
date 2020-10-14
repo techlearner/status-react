@@ -87,20 +87,22 @@ let
   "--sysroot $(xcrun --sdk ${iosSdk} --show-sdk-path) -fembed-bitcode -arch ${iosArch}"
   else throw "Unsupported platform!";
 
-  androidToolPathPrefix = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${osId}-${osArch}/bin/${targetArch}-linux-${platform}";
+  androidToolPathPrefix = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${osId}-${osArch}/bin";
+  androidToolPrefix = "${androidToolPathPrefix}/${targetArch}-linux-${platform}";
   compilerVars = if isAndroid then
     ''
-      export PATH=${ANDROID_NDK_HOME + "/toolchains/llvm/prebuilt/${osId}-${osArch}/bin"}:$PATH
-      export AR=${androidToolPathPrefix}-ar
-      export AS=${androidToolPathPrefix}-as
-      export NM=${androidToolPathPrefix}-nm
-      export CC=clang
-      export RANLIB=${androidToolPathPrefix}-ranlib
+      export PATH=${androidToolPathPrefix}:$PATH
+      export AR=${androidToolPrefix}-ar
+      export AS=${androidToolPrefix}-as
+      export NM=${androidToolPrefix}-nm
+      export RANLIB=${androidToolPrefix}-ranlib
+      export CC=${androidToolPathPrefix}/clang
 
       # This is important, otherwise Nim might not use proper tooling
       mkdir bin
       ln -s $AR bin/ar
       ln -s $AS bin/as
+      ln -s $CC bin/gcc
       ln -s $RANLIB bin/ranlib
       export PATH=./bin:$PATH
     ''
