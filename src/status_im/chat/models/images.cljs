@@ -7,6 +7,7 @@
             [status-im.ui.components.react :as react]
             [status-im.utils.image-processing :as image-processing]
             [taoensso.timbre :as log]
+            [cljs-bean.core :as bean]
             [clojure.string :as string]
             [status-im.utils.platform :as platform]))
 
@@ -51,18 +52,20 @@
  ::chat-open-image-picker
  (fn []
    (react/show-image-picker
-    (fn [result]
-      (resize-and-call
-       (aget result "path")
-       #(re-frame/dispatch [:chat.ui/image-selected %])))
-    "photo")))
+    (fn [images]
+      (doseq [result images]
+        (resize-and-call
+         (aget result "path")
+         #(re-frame/dispatch [:chat.ui/image-selected (aget result "localIdentifier") %]))))
+    {:media-type "photo"
+     :multiple   true})))
 
 (re-frame/reg-fx
  ::image-selected
  (fn [uri]
    (resize-and-call
     uri
-    #(re-frame/dispatch [:chat.ui/image-selected %]))))
+    #(re-frame/dispatch [:chat.ui/image-selected uri %]))))
 
 (re-frame/reg-fx
  ::camera-roll-get-photos
@@ -97,9 +100,15 @@
 
 (fx/defn image-selected
   {:events [:chat.ui/image-selected]}
-  [{:keys [db]} uri]
+  [{:keys [db]} original uri]
   (let [current-chat-id (:current-chat-id db)]
-    {:db (assoc-in db [:chats current-chat-id :metadata :sending-image :uri] uri)}))
+    {:db (update-in db [:chats current-chat-id :metadata :sending-image original] merge {:uri uri})}))
+
+(fx/defn image-unselected
+  {:events [:chat.ui/image-unselected]}
+  [{:keys [db]} original]
+  (let [current-chat-id (:current-chat-id db)]
+    {:db (update-in db [:chats current-chat-id :metadata :sending-image] dissoc original)}))
 
 (fx/defn chat-open-image-picker
   {:events [:chat.ui/open-image-picker]}
@@ -108,8 +117,13 @@
 
 (fx/defn camera-roll-pick
   {:events [:chat.ui/camera-roll-pick]}
-  [_ uri]
-  {::image-selected uri})
+  [{:keys [db]} uri]
+  (let [current-chat-id (:current-chat-id db)
+        images          (get-in db [:chats current-chat-id :metadata :sending-image])]
+   (when-not (get images uri)
+     {:db (update-in db [:chats current-chat-id :metadata :sending-image] assoc uri {:uri uri})
+      ::image-selected uri})))
+
 
 (fx/defn save-image-to-gallery
   {:events [:chat.ui/save-image-to-gallery]}
