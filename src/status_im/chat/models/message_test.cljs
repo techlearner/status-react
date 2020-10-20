@@ -183,36 +183,15 @@
                                    :loaded-chat-id "chat-id"
                                    :current-chat-id "chat-id"
                                    :view-id :chat}}
-        cofx-without-member  (update-in cofx [:db :chats "chat-id" :members-joined] disj "a")
         valid-message        {:chat-id     "chat-id"
                               :from        "present"
                               :message-type constants/message-type-private-group
                               :message-id  "1"
                               :clock-value 1
                               :whisper-timestamp 0
-                              :timestamp   0}
-        bad-chat-id-message  {:chat-id     "bad-chat-id"
-                              :from        "present"
-                              :message-type constants/message-type-private-group
-                              :message-id  "1"
-                              :clock-value 1
-                              :whisper-timestamp 0
-                              :timestamp   0}
-        bad-from-message     {:chat-id     "chat-id"
-                              :from        "not-present"
-                              :message-type constants/message-type-private-group
-                              :message-id  "1"
-                              :clock-value 1
-                              :whisper-timestamp 0
                               :timestamp   0}]
     (testing "a valid message"
-      (is (get-in (message/receive-one cofx valid-message) [:db :messages "chat-id" "1"])))
-    (testing "a message from someone not in the list of participants"
-      (is (not (message/receive-one cofx bad-from-message))))
-    (testing "a message with non existing chat-id"
-      (is (not (message/receive-one cofx bad-chat-id-message))))
-    (testing "a message from a delete chat"
-      (is (not (message/receive-one cofx-without-member valid-message))))))
+      (is (get-in (message/receive-one cofx valid-message) [:db :messages "chat-id" "1"])))))
 
 (deftest receive-public-chats
   (let [cofx                 {:db {:chats {"chat-id" {:public? true}}

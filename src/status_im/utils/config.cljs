@@ -40,6 +40,7 @@
 (def qr-test-menu-enabled? (enabled? (get-config :QR_READ_TEST_MENU "0")))
 (def referrals-invite-enabled? (enabled? (get-config :ENABLE_REFERRAL_INVITE "0")))
 (def quo-preview-enabled? (enabled? (get-config :ENABLE_QUO_PREVIEW "0")))
+(def communities-enabled? (enabled? (get-config :COMMUNITIES_ENABLED "1")))
 
 ;; CONFIG VALUES
 (def log-level

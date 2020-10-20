@@ -108,6 +108,12 @@
    "wakuext_getPushNotificationsServers" {}
    "wakuext_enablePushNotificationsBlockMentions" {}
    "wakuext_disablePushNotificationsBlockMentions" {}
+   "wakuext_createOrganisation" {}
+   "wakuext_createOrganisationChat" {}
+   "wakuext_inviteUserToOrganisation" {}
+   "wakuext_joinOrganisation" {}
+   "wakuext_leaveOrganisation" {}
+   "wakuext_organisations" {}
    "status_chats" {}
    "wallet_getTransfers" {}
    "wallet_getTokensBalances" {}

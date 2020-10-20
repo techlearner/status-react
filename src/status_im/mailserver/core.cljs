@@ -111,6 +111,7 @@
 (re-frame/reg-fx
  :mailserver/remove-peer
  (fn [enode]
+   (println "REMOVING PEER" enode)
    (remove-peer! enode)))
 
 (re-frame/reg-fx
@@ -214,11 +215,13 @@
       current-request
       [:from :to :force-to? :topics :chat-id])))
 
+;; HERE
 (fx/defn disconnect-from-mailserver
   [{:keys [db] :as cofx}]
   (let [{:keys [address]}       (fetch-current db)
         {:keys [peers-summary]} db
         gap-request?            (executing-gap-request? db)]
+    (println "DISCONNNECTING" address)
     {:db (cond-> (dissoc db :mailserver/current-request)
            gap-request?
            (-> (assoc :mailserver/fetching-gaps-in-progress {})
@@ -229,14 +232,15 @@
 (defn fetch-use-mailservers? [{:keys [db]}]
   (get-in db [:multiaccount :use-mailservers?]))
 
+;; HERE
 (fx/defn connect-to-mailserver
   "Add mailserver as a peer using `::add-peer` cofx and generate sym-key when
-   it doesn't exists
-   Peer summary will change and we will receive a signal from status go when
-   this is successful
-   A connection-check is made after `connection timeout` is reached and
-   mailserver-state is changed to error if it is not connected by then
-   No attempt is made if mailserver usage is disabled"
+  it doesn't exists
+  Peer summary will change and we will receive a signal from status go when
+  this is successful
+  A connection-check is made after `connection timeout` is reached and
+  mailserver-state is changed to error if it is not connected by then
+  No attempt is made if mailserver usage is disabled"
   {:events [:mailserver.ui/reconnect-mailserver-pressed]}
   [{:keys [db] :as cofx}]
   (let [{:keys [address]}       (fetch-current db)
@@ -461,6 +465,11 @@
 
 (fx/defn process-next-messages-request
   [{:keys [db now] :as cofx}]
+  (log/debug "process-next"
+             (:filters/initialized db)
+             (mobile-network-utils/syncing-allowed? cofx)
+             (fetch-use-mailservers? cofx)
+             (not (:mailserver/current-request db)))
   (when (and
          (:filters/initialized db)
          (mobile-network-utils/syncing-allowed? cofx)
@@ -520,6 +529,9 @@
   "mark mailserver status as `:error` if custom mailserver is used
   otherwise try to reconnect to another mailserver"
   [{:keys [db] :as cofx}]
+  (log/debug "change-mailserver"
+             (fetch-use-mailservers? cofx)
+             (not (zero? (:peers-count db))))
   (when (and (fetch-use-mailservers? cofx)
              ;; For some reason the tests are checking
              ;; for non-zero, so nil value is ok, not
@@ -557,6 +569,9 @@
   ;; check if logged into multiaccount
   (when (contains? db :multiaccount)
     (let [last-connection-attempt (:mailserver/last-connection-attempt db)]
+      (log/debug "check-connection"
+                 (fetch-use-mailservers? cofx)
+                 (<= (- now last-connection-attempt)))
       (when (and (fetch-use-mailservers? cofx)
                  (<= (- now last-connection-attempt)))
         (fx/merge cofx

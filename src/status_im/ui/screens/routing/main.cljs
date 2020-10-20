@@ -11,6 +11,7 @@
             [status-im.ui.screens.routing.intro-login-stack :as intro-login-stack]
             [status-im.ui.screens.routing.chat-stack :as chat-stack]
             [status-im.ui.screens.routing.wallet-stack :as wallet-stack]
+            [status-im.ui.screens.communities.views :as communities]
             [status-im.ui.screens.group.views :as group-chat]
             [status-im.ui.screens.group.events :as group.events]
             [status-im.ui.screens.routing.profile-stack :as profile-stack]
@@ -136,7 +137,15 @@
         :transition :presentation-ios
         :insets     {:bottom true}
         :component  wallet/request-transaction}]
-
+      (when config/communities-enabled?
+        [{:name       :communities
+          :transition :presentation-ios
+          :insets     {:bottom true}
+          :component  communities/communities}
+         {:name       :community
+          :transition :presentation-ios
+          :insets     {:bottom true}
+          :component  communities/community}])
       (when config/quo-preview-enabled?
         [{:name      :quo-preview
           :insets    {:top false :bottom false}

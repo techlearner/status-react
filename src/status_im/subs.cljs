@@ -209,6 +209,15 @@
 ;; push notifications
 (reg-root-key-sub :push-notifications/servers :push-notifications/servers)
 
+;; communities
+(reg-root-key-sub :communities :communities)
+
+(re-frame/reg-sub
+ :communities/community
+ :<- [:communities]
+ (fn [communities [_ id]]
+   (get communities id)))
+
 ;;GENERAL ==============================================================================================================
 
 (re-frame/reg-sub
@@ -594,6 +603,15 @@
  :<- [:chats/active-chats]
  (fn [chats [_ chat-id]]
    (get chats chat-id)))
+
+(re-frame/reg-sub
+ :chats/by-community-id
+ :<- [:chats/active-chats]
+ (fn [chats [_ community-id]]
+   (keep (fn [[_ chat]]
+           (when (= (:community-id chat) community-id)
+             chat))
+         chats)))
 
 (re-frame/reg-sub
  :chats/current-chat-ui-props

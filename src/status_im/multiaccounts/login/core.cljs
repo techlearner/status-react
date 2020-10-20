@@ -14,6 +14,7 @@
             [status-im.native-module.core :as status]
             [status-im.notifications.core :as notifications]
             [status-im.popover.core :as popover]
+            [status-im.communities.core :as communities]
             [status-im.protocol.core :as protocol]
             [status-im.stickers.core :as stickers]
             [status-im.ui.screens.mobile-network-settings.events :as mobile-network]
@@ -205,6 +206,7 @@
               (protocol/initialize-protocol {:default-mailserver true})
               (check-network-version network-id)
               (chat.loading/initialize-chats)
+              (communities/fetch)
               (contact/initialize-contacts)
               (stickers/init-stickers-packs)
               (mobile-network/on-network-status-change)
