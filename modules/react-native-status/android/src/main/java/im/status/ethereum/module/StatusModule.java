@@ -1324,6 +1324,48 @@ class StatusModule extends ReactContextBaseJavaModule implements LifecycleEventL
         StatusThreadPoolExecutor.getInstance().execute(r);
     }
 
+    @ReactMethod
+    public void getLinkPreviewWhitelist(final Callback callback) {
+        Log.d(TAG, "getLinkPreviewWhitelist");
+        if (!checkAvailability()) {
+            callback.invoke(false);
+            return;
+        }
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                String res = Statusgo.getLinkPreviewWhitelist();
+
+                Log.d(TAG, res);
+                callback.invoke(res);
+            }
+        };
+
+        StatusThreadPoolExecutor.getInstance().execute(r);
+    }
+
+    @ReactMethod
+    public void getLinkPreviewData(final String link, final Callback callback) {
+        Log.d(TAG, "getLinkPreviewData");
+        if (!checkAvailability()) {
+            callback.invoke(false);
+            return;
+        }
+
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                String res = Statusgo.getLinkPreviewData(link);
+
+                Log.d(TAG, res);
+                callback.invoke(res);
+            }
+        };
+
+        StatusThreadPoolExecutor.getInstance().execute(r);
+    }
+
 
     @ReactMethod
     public void getNodesFromContract(final String rpcEndpoint, final String contractAddress, final Callback callback) {

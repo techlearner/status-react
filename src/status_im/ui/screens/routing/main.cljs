@@ -24,7 +24,8 @@
             [status-im.ui.screens.chat.image.preview.views :as image-preview]
             [status-im.ui.screens.profile.contact.views :as contact]
             [status-im.ui.screens.notifications-settings.views :as notifications-settings]
-            [status-im.ui.screens.wallet.send.views :as wallet]))
+            [status-im.ui.screens.wallet.send.views :as wallet]
+            [status-im.ui.screens.link-previews-settings.views :as link-previews]))
 
 (defonce main-stack (navigation/create-stack))
 (defonce bottom-tabs (navigation/create-bottom-tabs))
@@ -78,6 +79,9 @@
         :on-focus   [::new-chat.events/new-chat-focus]
         :transition :presentation-ios
         :component  new-chat/new-contact}
+       {:name       :link-preview-settings
+        :transition :presentation-ios
+        :component  link-previews/link-previews-settings}
        {:name       :new-public-chat
         :transition :presentation-ios
         :insets     {:bottom true}

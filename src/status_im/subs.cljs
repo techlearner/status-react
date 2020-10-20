@@ -2340,3 +2340,29 @@
  :<- [:networks/manage]
  (fn [manage]
    (not-any? :error (vals manage))))
+
+;; LINK PREVIEW ========================================================================================================
+
+(re-frame/reg-sub
+ :link-preview/whitelist
+ :<- [:multiaccount]
+ (fn [multiaccount]
+   (get multiaccount :link-previews-whitelist)))
+
+(re-frame/reg-sub
+ :link-preview/cache
+ :<- [:multiaccount]
+ (fn [multiaccount]
+   (get multiaccount :link-previews-cache)))
+
+(re-frame/reg-sub
+ :link-preview/enabled-sites
+ :<- [:multiaccount]
+ (fn [multiaccount]
+   (get multiaccount :link-previews-enabled-sites)))
+
+(re-frame/reg-sub
+ :link-preview/can-ask-to-preview-links
+ :<- [:multiaccount]
+ (fn [multiaccount]
+   (get multiaccount :can-ask-to-preview-links)))

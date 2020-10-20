@@ -385,6 +385,17 @@
   (log/debug "[native-module] deactivateKeepAwake")
   (.deactivateKeepAwake ^js (status)))
 
+(defn link-preview-whitelist
+  "Get link preview whitelist"
+  [callback]
+  (.getLinkPreviewWhitelist ^js (status) #(callback (types/json->clj %))))
+
+(defn link-preview-data
+  "Get link preview data"
+  [link callback]
+  (log/debug "[native-module] link-preview-data")
+  (.getLinkPreviewData ^js (status) link #(callback (types/json->clj %))))
+
 (defn reset-keyboard-input [input selection]
   (log/debug "[native-module] resetKeyboardInput")
   (when platform/android?
