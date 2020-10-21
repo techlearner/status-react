@@ -7,7 +7,8 @@
             [status-im.i18n :as i18n]
             [status-im.ui.components.icons.vector-icons :as icons]
             [status-im.ui.screens.chat.sheets :as sheets]
-            [quo.components.safe-area :as safe-area]))
+            [quo.components.safe-area :as safe-area]
+            ["react-native-image-pan-zoom" :as pan-zoom]))
 
 (defview preview-image []
   (letsubs [{:keys [content] :as message} [:get-screen-params]
