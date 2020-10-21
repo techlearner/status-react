@@ -87,6 +87,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
 
         sign_in_view.just_fyi("Check that selected option is stored in Profile")
         profile_view = sign_in_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.sync_settings_button.click()
         profile_view.element_by_text('Mobile data').click()
         if not profile_view.use_mobile_data.attribute_value('checked'):
@@ -137,6 +138,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         profile_view = sign_in_view.profile_button.click()
 
         sign_in_view.just_fyi("Check default preferences")
+        profile_view.settings_button.click()
         profile_view.sync_settings_button.click()
         profile_view.element_by_text('Mobile data').click()
 
@@ -335,6 +337,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         sign_in_view = SignInView(self.driver)
         sign_in_view.create_user()
         profile_view = sign_in_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.privacy_and_security_button.click()
         profile_view.backup_recovery_phrase_button.click()
         profile_view.ok_continue_button.click()
@@ -455,6 +458,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         sign_in_view = SignInView(self.driver)
         sign_in_view.create_user()
         profile_view = sign_in_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.privacy_and_security_button.click()
         profile_view.backup_recovery_phrase_button.click()
         profile_view.ok_continue_button.click()
@@ -478,6 +482,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         sign_in_view = SignInView(self.driver)
         sign_in_view.create_user()
         profile_view = sign_in_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.help_button.click()
         base_web_view = profile_view.faq_button.click()
         base_web_view.open_in_webview()
@@ -601,6 +606,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         home_view.open_status_test_dapp()
         home_view.cross_icon.click()
         profile_view = home_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.privacy_and_security_button.click()
         profile_view.dapp_permissions_button.click()
         profile_view.element_by_text(test_dapp_name).click()
@@ -922,6 +928,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
         device_1_home = device_1.create_user()
         device_1_home.profile_button.click()
         device_1_profile = device_1_home.get_profile_view()
+        device_1_profile.settings_button.click()
         device_1_profile.privacy_and_security_button.click()
         device_1_profile.backup_recovery_phrase_button.click()
         device_1_profile.ok_continue_button.click()
