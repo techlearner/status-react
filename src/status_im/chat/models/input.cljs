@@ -135,6 +135,7 @@
   [{{:keys [current-chat-id] :as db} :db :as cofx}]
   (let [images (get-in db [:chats current-chat-id :metadata :sending-image])]
     (fx/merge cofx
+              ;; NOTE(Ferossgp): Ideally here and for all other types of message we should dissoc on success only
               {:db (update-in db [:chats current-chat-id :metadata] dissoc :sending-image)}
               (chat.message/send-messages
                (map (fn [[_ {:keys [uri]}]]
