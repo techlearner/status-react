@@ -7,7 +7,6 @@
             [status-im.ui.components.react :as react]
             [status-im.utils.image-processing :as image-processing]
             [taoensso.timbre :as log]
-            [cljs-bean.core :as bean]
             [clojure.string :as string]
             [status-im.utils.platform :as platform]))
 
@@ -120,10 +119,9 @@
   [{:keys [db]} uri]
   (let [current-chat-id (:current-chat-id db)
         images          (get-in db [:chats current-chat-id :metadata :sending-image])]
-   (when-not (get images uri)
-     {:db (update-in db [:chats current-chat-id :metadata :sending-image] assoc uri {:uri uri})
-      ::image-selected uri})))
-
+    (when-not (get images uri)
+      {:db (update-in db [:chats current-chat-id :metadata :sending-image] assoc uri {:uri uri})
+       ::image-selected uri})))
 
 (fx/defn save-image-to-gallery
   {:events [:chat.ui/save-image-to-gallery]}

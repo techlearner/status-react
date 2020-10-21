@@ -218,7 +218,7 @@
    [react/view (style/delivery-status outgoing)
     [message-delivery-status message]]])
 
-(defn message-content-image [{:keys [content outgoing]} {:keys [on-long-press]}]
+(defn message-content-image [{:keys [content outgoing] :as message} {:keys [on-long-press]}]
   (let [dimensions (reagent/atom [260 260])
         uri        (:image content)]
     (react/image-get-size
@@ -228,6 +228,8 @@
     (fn []
       (let [k (/ (max (first @dimensions) (second @dimensions)) 260)]
         [react/touchable-highlight {:on-press      (fn []
+                                                     (when (:image content)
+                                                       (re-frame/dispatch [:navigate-to :image-preview message]))
                                                      (react/dismiss-keyboard!))
                                     :on-long-press on-long-press}
          [react/view {:style (style/image-content outgoing)}
