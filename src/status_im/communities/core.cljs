@@ -14,11 +14,8 @@
 (defn <-rpc [{:keys [description] :as c}]
   (let [identity (:identity description)]
     (-> c
-        ;; TODO: to be removed
-        (assoc :admin (:Admin c))
         (assoc-in [:description :identity] {:display-name (:display_name identity)
                                             :description (:description identity)}))))
-
 (fx/defn handle-chats [cofx chats]
   (models.chat/ensure-chats cofx chats))
 
@@ -86,3 +83,17 @@
                      :on-error #(do
                                   (log/error "failed to create community channel" %)
                                   (re-frame/dispatch [on-failure-event %]))}]})
+
+(def no-membership-access 1)
+(def invitation-only-access 2)
+(def on-request-access 3)
+
+(defn require-membership? [{:keys [permissions]}]
+  (not= no-membership-access (:access permissions)))
+
+;; TODO: test this
+(defn can-post? [{:keys [admin] :as community} pk chat-id]
+  (or admin
+      (and (not (require-membership? (get-in community [:description :permissions])))
+           (not (require-membership? (get-in community [:description :chats chat-id :permissions]))))
+      (get-in community [:description :chats chat-id :members pk])))

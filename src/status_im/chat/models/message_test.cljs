@@ -205,18 +205,9 @@
                               :message-id  "1"
                               :clock-value 1
                               :whisper-timestamp 0
-                              :timestamp   0}
-        bad-chat-id-message  {:chat-id     "bad-chat-id"
-                              :from        "present"
-                              :message-type constants/message-type-public-group
-                              :message-id  "1"
-                              :clock-value 1
-                              :whisper-timestamp 0
                               :timestamp   0}]
     (testing "a valid message"
-      (is (get-in (message/receive-one cofx valid-message) [:db :messages "chat-id" "1"])))
-    (testing "a message with non existing chat-id"
-      (is (not (message/receive-one cofx bad-chat-id-message))))))
+      (is (get-in (message/receive-one cofx valid-message) [:db :messages "chat-id" "1"])))))
 
 (deftest receive-one-to-one
   (with-redefs [gfycat/generate-gfy (constantly "generated")

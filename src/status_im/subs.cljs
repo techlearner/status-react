@@ -14,6 +14,7 @@
             [status-im.ethereum.transactions.core :as transactions]
             [status-im.fleet.core :as fleet]
             [status-im.group-chats.db :as group-chats.db]
+            [status-im.communities.core :as communities]
             [status-im.group-chats.core :as group-chat]
             [status-im.i18n :as i18n]
             [status-im.multiaccounts.core :as multiaccounts]
@@ -217,6 +218,14 @@
  :<- [:communities]
  (fn [communities [_ id]]
    (get communities id)))
+
+(re-frame/reg-sub
+ :communities/current-community
+ :<- [:communities]
+ :<- [:chats/current-raw-chat]
+
+ (fn [[communities {:keys [community-id]}]]
+   (get communities community-id)))
 
 ;;GENERAL ==============================================================================================================
 
@@ -668,8 +677,10 @@
  :chats/current-chat
  :<- [:chats/current-raw-chat]
  :<- [:multiaccount/public-key]
+ :<- [:communities/current-community]
  (fn [[{:keys [group-chat] :as current-chat}
-       my-public-key]]
+       my-public-key
+       community]]
    (when current-chat
      (cond-> current-chat
        (chat.models/public-chat? current-chat)
@@ -679,6 +690,10 @@
             (group-chats.db/joined? my-public-key current-chat))
        (assoc :show-input? true
               :joined? true)
+
+       (and (chat.models/community-chat? current-chat)
+            (communities/can-post? community my-public-key current-chat))
+       (assoc :show-input? true)
 
        (not group-chat)
        (assoc :show-input? true)))))

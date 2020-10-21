@@ -10,6 +10,7 @@
             [status-im.i18n :as i18n]
             [status-im.mailserver.core :as mailserver]
             [status-im.ui.components.colors :as colors]
+            [status-im.constants :as constants]
             [status-im.navigation :as navigation]
             [status-im.utils.clocks :as utils.clocks]
             [status-im.utils.fx :as fx]
@@ -32,6 +33,9 @@
 
 (def one-to-one-chat?
   (complement multi-user-chat?))
+
+(defn community-chat? [{:keys [chat-type]}]
+  (= chat-type constants/community-chat-type))
 
 (defn public-chat?
   ([chat]
@@ -169,6 +173,7 @@
                 :name                           topic
                 :chat-name                      (str "#" topic)
                 :group-chat                     true
+                :chat-type                      constants/public-chat-type
                 :contacts                       #{}
                 :public?                        true
                 :might-have-join-time-messages? (get-in cofx [:db :multiaccount :use-mailservers?])

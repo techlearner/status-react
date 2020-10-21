@@ -24,6 +24,11 @@
 (def emoji-reaction-sad 5)
 (def emoji-reaction-angry 6)
 
+(def one-to-one-chat-type 1)
+(def public-chat-type 2)
+(def private-group-chat-type 3)
+(def community-chat-type 4)
+
 (def reactions {emoji-reaction-love        (:love resources/reactions)
                 emoji-reaction-thumbs-up   (:thumbs-up resources/reactions)
                 emoji-reaction-thumbs-down (:thumbs-down resources/reactions)
@@ -61,7 +66,7 @@
 
 (def system "system")
 
-(def mainnet-rpc-url (str "https://mainnet.infura.io/v3/" config/INFURA_TOKEN))
+(def mainnet-rpc-url "https://eth-mainnet.gateway.pokt.network/v1/5f8fee9fb90218002e9cea56")
 
 (def mainnet-networks
   [{:id             "mainnet_rpc",
