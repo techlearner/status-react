@@ -143,7 +143,7 @@
                        :content-type constants/content-type-image
                        :image-path   (utils/safe-replace uri #"file://" "")
                        :text         (i18n/label :t/update-to-see-image)})
-                     images)))))
+                    images)))))
 
 (fx/defn send-audio-message
   [cofx audio-path duration current-chat-id]
