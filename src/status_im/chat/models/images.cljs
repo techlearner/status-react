@@ -11,6 +11,7 @@
             [status-im.utils.platform :as platform]))
 
 (def maximum-image-size-px 2000)
+(def max-images-batch 5)
 
 (defn- resize-and-call [uri cb]
   (react/image-get-size
@@ -52,7 +53,9 @@
  (fn []
    (react/show-image-picker
     (fn [images]
-      (doseq [result images]
+      (when (pos? (count images))
+        (re-frame/dispatch [:chat.ui/clear-sending-images]))
+      (doseq [result (take max-images-batch images)]
         (resize-and-call
          (aget result "path")
          #(re-frame/dispatch [:chat.ui/image-selected (aget result "localIdentifier") %]))))
@@ -91,11 +94,16 @@
   [{db :db} photos]
   {:db (assoc db :camera-roll-photos (mapv #(get-in % [:node :image :uri]) photos))})
 
-(fx/defn cancel-sending-image
-  {:events [:chat.ui/cancel-sending-image]}
+(fx/defn clear-sending-images
+  {:events [:chat.ui/clear-sending-images]}
   [{:keys [db]}]
   (let [current-chat-id (:current-chat-id db)]
-    {:db (update-in db [:chats current-chat-id :metadata] dissoc :sending-image)}))
+    {:db (update-in db [:chats current-chat-id :metadata] assoc :sending-image {})}))
+
+(fx/defn cancel-sending-image
+  {:events [:chat.ui/cancel-sending-image]}
+  [cofx]
+  (clear-sending-images cofx))
 
 (fx/defn image-selected
   {:events [:chat.ui/image-selected]}
@@ -119,8 +127,9 @@
   [{:keys [db]} uri]
   (let [current-chat-id (:current-chat-id db)
         images          (get-in db [:chats current-chat-id :metadata :sending-image])]
-    (when-not (get images uri)
-      {:db (update-in db [:chats current-chat-id :metadata :sending-image] assoc uri {:uri uri})
+    (when (and (< (count images) max-images-batch)
+               (not (get images uri)))
+      {:db              (update-in db [:chats current-chat-id :metadata :sending-image] assoc uri {:uri uri})
        ::image-selected uri})))
 
 (fx/defn save-image-to-gallery
