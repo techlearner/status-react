@@ -48,6 +48,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
 
         sign_in.just_fyi('Delete 2nd multiaccount')
         public_key, username = sign_in.get_public_key_and_username(return_username=True)
+        profile.settings_button.click()
         profile.privacy_and_security_button.click()
         profile.delete_my_profile_button.click()
         for element in (username, delete_alert_text):
@@ -63,6 +64,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         sign_in.just_fyi('Delete last multiaccount')
         sign_in.sign_in()
         sign_in.profile_button.click()
+        profile.settings_button.click()
         profile.privacy_and_security_button.click()
         profile.delete_my_profile_button.click()
         profile.delete_my_profile_password_input.set_value(common_password)
@@ -444,6 +446,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         sign_in_view = SignInView(self.driver)
         sign_in_view.create_user()
         profile_view = sign_in_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.add_custom_network()
         sign_in_view.sign_in()
         profile_view = sign_in_view.profile_button.click()
@@ -588,6 +591,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         base_web_view.click_system_back_button()
         home_view = signin_view.create_user()
         profile = home_view.profile_button.click()
+        profile.settings_button.click()
         about_view = profile.about_button.click()
         about_view.privacy_policy_button.click()
 
@@ -661,6 +665,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         profile_view = home_view.profile_button.click()
 
         profile_view.just_fyi('pin mailserver')
+        profile_view.settings_button.click()
         profile_view.sync_settings_button.click()
         mailserver_1 = profile_view.return_mailserver_name(mailserver_gc, used_fleet)
         mailserver_2 = profile_view.return_mailserver_name(mailserver_ams, used_fleet)
@@ -736,6 +741,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
         username_1, username_2 = profile_1.default_username_text.text, profile_2.default_username_text.text
 
         profile_1.just_fyi('Add custom bootnode, enable bootnodes and check validation')
+        profile_1.settings_button.click()
         profile_1.advanced_button.click()
         profile_1.bootnodes_button.click()
         profile_1.add_bootnode_button.click()
@@ -791,6 +797,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
         username_1 = profile_1.default_username_text.text
 
         profile_1.just_fyi('disable autoselection')
+        profile_1.settings_button.click()
         profile_1.sync_settings_button.click()
         profile_1.mail_server_button.click()
         mailserver_1 = profile_1.return_mailserver_name(mailserver_hk, used_fleet)
@@ -870,6 +877,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
         profile_1 = home_1.profile_button.click()
 
         profile_1.just_fyi('add non-working mailserver and connect to it')
+        profile_1.settings_button.click()
         profile_1.sync_settings_button.click()
         profile_1.mail_server_button.click()
         profile_1.plus_button.click()
@@ -1014,6 +1022,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
         device_1_home = device_1.create_user()
         device_1_home.profile_button.click()
         device_1_profile = device_1_home.get_profile_view()
+        device_1_profile.settings_button.click()
         device_1_profile.privacy_and_security_button.click()
         device_1_profile.backup_recovery_phrase_button.click()
         recovery_phrase = device_1_profile.backup_recovery_phrase()
@@ -1095,6 +1104,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
         profile_1 = sign_in_1.profile_button.click()
         profile_1.switch_network('Mainnet with upstream RPC')
         home_1.profile_button.click()
+        profile_1.settings_button.click()
         dapp_view_1 = profile_1.ens_usernames_button.click()
         dapp_view_1.element_by_text('Get started').click()
         dapp_view_1.ens_name.set_value(ens_user['ens'])

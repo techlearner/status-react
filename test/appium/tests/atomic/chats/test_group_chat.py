@@ -451,6 +451,7 @@ class TestGroupChatMultipleDevice(MultipleDeviceTestCase):
         device_1_home = device_1.create_user()
         device_1_home.profile_button.click()
         device_1_profile = device_1_home.get_profile_view()
+        device_1_profile.settings_button.click()
         device_1_profile.privacy_and_security_button.click()
         device_1_profile.backup_recovery_phrase_button.click()
         device_1_profile.ok_continue_button.click()

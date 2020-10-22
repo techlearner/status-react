@@ -49,7 +49,7 @@ class AddToContacts(BaseButton):
 class RemoveFromContactsButton(BaseButton):
     def __init__(self, driver):
         super(RemoveFromContactsButton, self).__init__(driver)
-        self.locator = self.Locator.accessibility_id('in-contacts-button')
+        self.locator = self.Locator.accessibility_id('Remove from contacts-item-button')
 
 
 class AddGroupChatMembersButton(BaseButton):
@@ -247,7 +247,7 @@ class BlockContactButton(BaseButton):
 class UnblockContactButton(BaseButton):
     def __init__(self, driver):
         super(UnblockContactButton, self).__init__(driver)
-        self.locator = self.Locator.accessibility_id('unblock-contact')
+        self.locator = self.Locator.accessibility_id('Unblock-item-button')
 
     def click(self):
         self.scroll_to_element()
@@ -361,7 +361,7 @@ class ProfileSendMessageButton(BaseButton):
 class ProfileBlockContactButton(BaseButton):
     def __init__(self, driver):
         super(ProfileBlockContactButton, self).__init__(driver)
-        self.locator = self.Locator.accessibility_id('block-contact')
+        self.locator = self.Locator.accessibility_id('Block-item-button')
 
     def click(self):
         self.scroll_to_element()
@@ -371,7 +371,7 @@ class ProfileBlockContactButton(BaseButton):
 class ProfileAddToContactsButton(BaseButton):
     def __init__(self, driver):
         super(ProfileAddToContactsButton, self).__init__(driver)
-        self.locator = self.Locator.accessibility_id('add-to-contacts-button')
+        self.locator = self.Locator.accessibility_id('Add to contacts-item-button')
 
 
 class JoinChatButton(BaseButton):
@@ -923,7 +923,7 @@ class ChatView(BaseView):
     def view_profile_long_press(self, message = str):
         self.chat_element_by_text(message).long_press_element()
         self.view_profile_by_avatar_button.click()
-        self.profile_details.wait_for_visibility_of_element(5)
+        self.profile_block_contact.wait_for_visibility_of_element(5)
 
     def move_to_messages_by_time_marker(self, marker='Today'):
         self.driver.info("Moving to messages by time marker: '%s'" % marker)
