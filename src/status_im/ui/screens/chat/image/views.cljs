@@ -6,6 +6,7 @@
             [quo.components.animated.pressable :as pressable]
             [re-frame.core :as re-frame]
             [quo.design-system.colors :as colors]
+            [status-im.chat.models.images :as images]
             [quo.core :as quo]))
 
 (defn take-picture []
@@ -26,15 +27,19 @@
       [icons/icon :main-icons/gallery]]]]])
 
 (defn image-preview [uri all-selected first? panel-height]
-  (let [wh       (/ (- panel-height 8) 2)
-        selected (get all-selected uri)]
+  (let [wh           (/ (- panel-height 8) 2)
+        selected     (get all-selected uri)
+        max-selected (>= (count all-selected) images/max-images-batch)]
     [react/touchable-highlight {:on-press #(if selected
                                              (re-frame/dispatch [:chat.ui/image-unselected uri])
-                                             (re-frame/dispatch [:chat.ui/camera-roll-pick uri]))}
+                                             (re-frame/dispatch [:chat.ui/camera-roll-pick uri]))
+                                :disabled (and max-selected (not selected))}
      [react/view {:style (merge {:width         wh
                                  :height        wh
                                  :border-radius 4
                                  :overflow      :hidden}
+                                (when (and (not selected) max-selected)
+                                  {:opacity 0.5})
                                 (when first?
                                   {:margin-bottom 4}))}
       [react/image {:style  (merge {:width            wh
