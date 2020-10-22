@@ -23,11 +23,16 @@
         (if resize? maximum-image-size-px width)
         (if resize? maximum-image-size-px height)
         60
-        (fn [resized-image]
-          (let [path (aget resized-image "path")
+        (fn [^js resized-image]
+          (let [path (.-path resized-image)
                 path (if (string/starts-with? path "file") path (str "file://" path))]
             (cb path)))
         #(log/error "could not resize image" %))))))
+
+(defn result->id [^js result]
+  (if platform/ios?
+    (.-localIdentifier result)
+    (.-path result)))
 
 (re-frame/reg-fx
  ::save-image-to-gallery
@@ -42,8 +47,8 @@
          width
          height
          100
-         (fn [resized-image]
-           (let [path (aget resized-image "path")
+         (fn [^js resized-image]
+           (let [path (.-path resized-image)
                  path (if (string/starts-with? path "file") path (str "file://" path))]
              (.saveToCameraRoll CameraRoll path)))
          #(log/error "could not resize image" %)))))))
@@ -55,10 +60,9 @@
     (fn [images]
       (when (pos? (count images))
         (re-frame/dispatch [:chat.ui/clear-sending-images]))
-      (doseq [result (take max-images-batch images)]
-        (resize-and-call
-         (aget result "path")
-         #(re-frame/dispatch [:chat.ui/image-selected (aget result "localIdentifier") %]))))
+      (doseq [^js result (take max-images-batch images)]
+        (resize-and-call (.-path result)
+                         #(re-frame/dispatch [:chat.ui/image-selected (result->id result) %]))))
     {:media-type "photo"
      :multiple   true})))
 
