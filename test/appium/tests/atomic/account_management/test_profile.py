@@ -515,6 +515,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         sign_in_view = SignInView(self.driver)
         sign_in_view.create_user()
         profile_view = sign_in_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.advanced_button.click()
         for text in 'INFO', used_fleet:
             if not profile_view.element_by_text(text).is_element_displayed():
@@ -1142,7 +1143,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
             if not element.is_element_displayed():
                 self.errors.append('Was not redirected to user profile after tappin on mention!')
         chat_1.element_starts_with_text(user_1['ens'] +'.stateofus.eth','button').click()
-        if not profile_1.privacy_and_security_button.is_element_displayed():
+        if not profile_1.contacts_button.is_element_displayed():
                 self.errors.append('Was not redirected to own profile after tapping on mention of myself from another user!')
 
         home_2.just_fyi('check that ENS name is shown in 1-1 chat without adding user as contact in header, profile, options')
