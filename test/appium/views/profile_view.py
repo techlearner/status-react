@@ -527,16 +527,13 @@ class SyncAllButton(BaseButton):
 class ContactsButton(BaseButton):
     def __init__(self, driver):
         super(ContactsButton, self).__init__(driver)
-        # self.locator = self.Locator.accessibility_id('contacts-button')
-        self.locator = self.Locator.text_selector('Contacts')
+        self.locator = self.Locator.accessibility_id('Contacts-item-button')
 
 
 class SettingsButton(BaseButton):
     def __init__(self, driver):
         super(SettingsButton, self).__init__(driver)
-        # self.locator = self.Locator.accessibility_id('contacts-button')
-        self.locator = self.Locator.text_selector('Settings')
-
+        self.locator = self.Locator.accessibility_id('Settings-item-button')
 
 class BlockedUsersButton(BaseButton):
     def __init__(self, driver):
