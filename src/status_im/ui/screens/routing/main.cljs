@@ -25,8 +25,7 @@
             [status-im.ui.screens.profile.contact.views :as contact]
             [status-im.ui.screens.notifications-settings.views :as notifications-settings]
             [status-im.ui.screens.wallet.send.views :as wallet]
-            [status-im.ui.screens.profile.my-status.views :as my-status]
-            [status-im.ui.screens.profile.contact.views :as profile.contact]))
+            [status-im.ui.screens.profile.my-status.views :as my-status]))
 
 (defonce main-stack (navigation/create-stack))
 (defonce bottom-tabs (navigation/create-bottom-tabs))
@@ -145,7 +144,7 @@
        {:name       :profile
         :transition :presentation-ios
         :insets     {:bottom true}
-        :component  profile.contact/profile}]
+        :component  contact/profile}]
 
       (when config/quo-preview-enabled?
         [{:name      :quo-preview

@@ -1246,19 +1246,19 @@
    {:db (assoc db :dimensions/window (dimensions/window dimensions))}))
 
 (fx/defn reset-current-profile-chat [{:keys [db] :as cofx} public-key]
-   (let [chat-id (chat/profile-chat-topic public-key)]
-      (when-not (= (:current-chat-id db) chat-id)
-        (fx/merge cofx
-                  (chat/start-public-chat chat-id {:dont-navigate? true :profile-public-key public-key})
-                  (chat/offload-all-messages)
-                  (chat/preload-chat-data chat-id)))))
+  (let [chat-id (chat/profile-chat-topic public-key)]
+    (when-not (= (:current-chat-id db) chat-id)
+      (fx/merge cofx
+                (chat/start-public-chat chat-id {:dont-navigate? true :profile-public-key public-key})
+                (chat/offload-all-messages)
+                (chat/preload-chat-data chat-id)))))
 
 (fx/defn reset-current-chat [{:keys [db] :as cofx} chat-id]
-   (when-not (= (:current-chat-id db) chat-id)
-      (fx/merge cofx
-                (chat/start-public-chat chat-id {:dont-navigate? true})
-                (chat/offload-all-messages)
-                (chat/preload-chat-data chat-id))))
+  (when-not (= (:current-chat-id db) chat-id)
+    (fx/merge cofx
+              (chat/start-public-chat chat-id {:dont-navigate? true})
+              (chat/offload-all-messages)
+              (chat/preload-chat-data chat-id))))
 
 ;; NOTE: Will be removed with the keycard PR
 (handlers/register-handler-fx
