@@ -57,14 +57,20 @@
  ::chat-open-image-picker
  (fn []
    (react/show-image-picker
-    (fn [images]
-      (when (pos? (count images))
+    (fn [^js images]
+      ;; NOTE(Ferossgp): Because we can't highlight the already selected images inside
+      ;; gallery, we just clean previous state and set all newly picked images
+      (when (and platform/ios? (pos? (count images)))
         (re-frame/dispatch [:chat.ui/clear-sending-images]))
-      (doseq [^js result (take max-images-batch images)]
+      (doseq [^js result (if platform/ios?
+                           (take max-images-batch images)
+                           [images])]
         (resize-and-call (.-path result)
                          #(re-frame/dispatch [:chat.ui/image-selected (result->id result) %]))))
+    ;; NOTE(Ferossgp): On android you cannot set max limit on images, when a user
+    ;; selects too many images the app crashes.
     {:media-type "photo"
-     :multiple   true})))
+     :multiple   platform/ios?})))
 
 (re-frame/reg-fx
  ::image-selected
@@ -123,8 +129,11 @@
 
 (fx/defn chat-open-image-picker
   {:events [:chat.ui/open-image-picker]}
-  [_]
-  {::chat-open-image-picker nil})
+  [{:keys [db]}]
+  (let [current-chat-id (:current-chat-id db)
+        images          (get-in db [:chats current-chat-id :metadata :sending-image])]
+    (when (< (count images) max-images-batch)
+      {::chat-open-image-picker nil})))
 
 (fx/defn camera-roll-pick
   {:events [:chat.ui/camera-roll-pick]}

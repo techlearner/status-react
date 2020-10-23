@@ -2,6 +2,7 @@
   (:require-macros [status-im.utils.views :refer [defview letsubs]])
   (:require [status-im.ui.components.react :as react]
             [status-im.ui.components.icons.vector-icons :as icons]
+            [status-im.ui.components.permissions :as permissions]
             [reagent.core :as reagent]
             [quo.components.animated.pressable :as pressable]
             [re-frame.core :as re-frame]
@@ -10,7 +11,15 @@
             [quo.core :as quo]))
 
 (defn take-picture []
-  (react/show-image-picker-camera #(re-frame/dispatch [:chat.ui/image-captured (.-path %)]) {}))
+  (permissions/request-permissions
+   {:permissions [:camera]
+    :on-allowed  (fn []
+                   (react/show-image-picker-camera #(re-frame/dispatch [:chat.ui/image-captured (.-path %)]) {}))}))
+
+(defn show-image-picker []
+  (permissions/request-permissions
+   {:permissions [:read-external-storage :write-external-storage]
+    :on-allowed  #(re-frame/dispatch [:chat.ui/open-image-picker])}))
 
 (defn buttons []
   [react/view
@@ -20,7 +29,7 @@
     [react/view {:style {:padding 10}}
      [icons/icon :main-icons/camera]]]
    [react/view {:style {:padding-top 8}}
-    [pressable/pressable {:on-press            #(re-frame/dispatch [:chat.ui/open-image-picker])
+    [pressable/pressable {:on-press            show-image-picker
                           :accessibility-label :open-gallery
                           :type                :scale}
      [react/view {:style {:padding 10}}
@@ -77,7 +86,9 @@
 
 (defview image-view []
   {:component-did-mount (fn []
-                          (re-frame/dispatch [:chat.ui/camera-roll-get-photos 20]))}
+                          (permissions/request-permissions
+                           {:permissions [:read-external-storage :write-external-storage]
+                            :on-allowed  #(re-frame/dispatch [:chat.ui/camera-roll-get-photos 20])}))}
   [react/animated-view {:style {:background-color (:ui-background @colors/theme)
                                 :flex             1}}
    [react/scroll-view {:horizontal true :style {:flex 1}}
