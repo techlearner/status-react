@@ -78,7 +78,7 @@
 (defview image-view []
   {:component-did-mount (fn []
                           (re-frame/dispatch [:chat.ui/camera-roll-get-photos 20]))}
-  [react/animated-view {:style {:background-color colors/white
+  [react/animated-view {:style {:background-color (:ui-background @colors/theme)
                                 :flex             1}}
    [react/scroll-view {:horizontal true :style {:flex 1}}
     [react/view {:flex 1 :flex-direction :row :margin-horizontal 4}
