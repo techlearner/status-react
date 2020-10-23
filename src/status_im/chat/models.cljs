@@ -268,7 +268,7 @@
 (fx/defn start-public-chat
   "Starts a new public chat"
   [cofx topic {:keys [dont-navigate? profile-public-key]}]
-  (if (new-public-chat.db/valid-topic? topic)
+  (if (or (new-public-chat.db/valid-topic? topic) profile-public-key)
     (if (active-chat? cofx topic)
       (when-not dont-navigate?
         (navigate-to-chat cofx topic))
