@@ -7,7 +7,8 @@
             [quo.core :as quo]
             [status-im.react-native.resources :as resources]
             [status-im.ui.components.topbar :as topbar]
-            [status-im.ui.screens.link-previews-settings.styles :as styles]))
+            [status-im.ui.screens.link-previews-settings.styles :as styles]
+            [status-im.chat.models.link-preview :as link-preview]))
 
 (defn prepare-urls-items-data [link-previews-enabled-sites]
   (fn [{:keys [title address]}]
@@ -18,7 +19,7 @@
        :accessory :switch
        :active    (contains? link-previews-enabled-sites title)
        :on-press #(re-frame/dispatch
-                   [:link-preview/enable title ((complement boolean) enabled?)])})))
+                   [::link-preview/enable title ((complement boolean) enabled?)])})))
 
 (views/defview link-previews-settings []
   (views/letsubs [{:keys [link-previews-whitelist link-previews-enabled-sites]} [:multiaccount]]
@@ -36,7 +37,7 @@
       (when (> (count link-previews-whitelist) 1)
         [quo/button {:on-press #(doseq [site (map :title link-previews-whitelist)]
                                   (re-frame/dispatch
-                                   [:link-preview/enable site true]))
+                                   [::link-preview/enable site true]))
                      :type     :secondary
                      :style styles/enable-all}
          (i18n/label :t/enable-all)])]

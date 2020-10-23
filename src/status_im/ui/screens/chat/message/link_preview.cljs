@@ -1,13 +1,13 @@
 (ns status-im.ui.screens.chat.message.link-preview
   (:require [re-frame.core :as re-frame]
             [clojure.string :as string]
-            [status-im.native-module.core :as native-module]
             [status-im.ui.components.react :as react]
             [quo.core :as quo]
             [status-im.utils.security :as security]
             [status-im.i18n :as i18n]
             [status-im.ui.screens.chat.message.styles :as styles]
-            [status-im.react-native.resources :as resources])
+            [status-im.react-native.resources :as resources]
+            [status-im.chat.models.link-preview :as link-preview])
   (:require-macros [status-im.utils.views :refer [defview letsubs]]))
 
 (defn merge-paragraphs-content [parsed-text]
@@ -67,23 +67,19 @@
     (i18n/label :enable)]
    [quo/separator]
    [quo/button {:on-press #(re-frame/dispatch
-                            [:link-preview/dont-ask-to-preview-pressed])
+                            [::link-preview/should-suggest-link-preview false])
                 :type     :secondary}
     (i18n/label :t/dont-ask)]])
 
-(defn load-and-cache-link-data [link]
-  (native-module/link-preview-data link
-                                   (fn [{:keys [error] :as result}]
-                                     (when-not error
-                                       (re-frame/dispatch
-                                        [:link-preview/cache-link-preview-data link result])))))
+(defn load-and-cache-link-data [link])
 
 (defview link-preview-loader [link outgoing]
   (letsubs [cache [:link-preview/cache]]
     (let [{:keys [site title thumbnailUrl] :as preview-data} (get cache link)]
       (if (not preview-data)
         (do
-          (load-and-cache-link-data link)
+          (re-frame/dispatch
+           [::link-preview/load-link-preview-data link])
           nil)
 
         [react/touchable-highlight
@@ -105,7 +101,7 @@
 
 (defview link-preview-wrapper [link outgoing]
   (letsubs
-    [ask-user? [:link-preview/can-ask-to-preview-links]
+    [ask-user? [:link-preview/link-preview-request-enabled]
      whitelist [:link-preview/whitelist]
      enabled-sites   [:link-preview/enabled-sites]]
     (let [{:keys [whitelisted enabled]} (link-previewable-context link whitelist enabled-sites)]

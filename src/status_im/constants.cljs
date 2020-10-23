@@ -126,7 +126,7 @@
    :log-level config/log-level
    :webview-allow-permission-requests? false
    :link-previews-enabled-sites #{}
-   :can-ask-to-preview-links true})
+   :link-preview-request-enabled true})
 
 (defn default-visible-tokens [chain]
   (get-in default-multiaccount [:wallet/visible-tokens chain]))

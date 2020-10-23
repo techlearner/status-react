@@ -710,23 +710,6 @@ RCT_EXPORT_METHOD(generateAliasAndIdenticonAsync:(NSString *)publicKey
     callback(@[aliasResult, identiconResult]);
 }
 
-RCT_EXPORT_METHOD(getLinkPreviewWhitelist:(RCTResponseSenderBlock)callback) {
-#if DEBUG
-    NSLog(@"getLinkPreviewWhitelist() method called");
-#endif
-    NSString *whitelist = StatusgoGetLinkPreviewWhitelist();
-    callback(@[whitelist]);
-}
-
-RCT_EXPORT_METHOD(getLinkPreviewData:(NSString *)link
-                  callback:(RCTResponseSenderBlock)callback) {
-#if DEBUG
-    NSLog(@"getLinkPreviewData() method called");
-#endif
-    NSString *data = StatusgoGetLinkPreviewData(link);
-    callback(@[data]);
-}
-
 RCT_EXPORT_METHOD(callPrivateRPC:(NSString *)payload
                   callback:(RCTResponseSenderBlock)callback) {
     dispatch_async( dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{

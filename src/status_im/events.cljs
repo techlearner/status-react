@@ -1265,18 +1265,3 @@
                 :multiaccounts (keycard/multiaccounts-screen-did-load %)
                 (:wallet-stack :wallet) (wallet.events/wallet-will-focus %)
                 nil))))
-
-(handlers/register-handler-fx
- :link-preview/enable
- (fn [cofx [_ site enabled?]]
-   (link-preview/set-link-preview cofx site enabled?)))
-
-(handlers/register-handler-fx
- :link-preview/dont-ask-to-preview-pressed
- (fn [cofx [_]]
-   (link-preview/should-suggest-link-preview cofx false)))
-
-(handlers/register-handler-fx
- :link-preview/cache-link-preview-data
- (fn [cofx [_ site data]]
-   (link-preview/cache-link-preview-data cofx site data)))

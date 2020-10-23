@@ -2362,7 +2362,7 @@
    (get multiaccount :link-previews-enabled-sites)))
 
 (re-frame/reg-sub
- :link-preview/can-ask-to-preview-links
+ :link-preview/link-preview-request-enabled
  :<- [:multiaccount]
  (fn [multiaccount]
-   (get multiaccount :can-ask-to-preview-links)))
+   (get multiaccount :link-preview-request-enabled)))
