@@ -1256,7 +1256,6 @@
 (fx/defn reset-current-chat [{:keys [db] :as cofx} chat-id]
   (when-not (= (:current-chat-id db) chat-id)
     (fx/merge cofx
-              (chat/start-public-chat chat-id {:dont-navigate? true})
               (chat/offload-all-messages)
               (chat/preload-chat-data chat-id))))
 

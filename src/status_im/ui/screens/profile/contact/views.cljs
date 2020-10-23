@@ -186,6 +186,7 @@
          [quo/animated-header
           {:use-insets        false
            :right-accessories [{:icon     :main-icons/share
+                                :accessibility-label :share-button
                                 :on-press on-share}]
            :left-accessories  [{:icon                :main-icons/close
                                 :accessibility-label :back-button
