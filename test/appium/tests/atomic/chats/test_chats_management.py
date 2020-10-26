@@ -551,7 +551,7 @@ class TestChatManagementMultipleDevice(MultipleDeviceTestCase):
             self.errors.append('3-random username is not resolved in chat input after selecting it in mention suggestions list!')
         chat_1.send_message_button.click()
         chat_1.chat_element_by_text(username_2).click()
-        chat_1.profile_add_to_contacts.wait_for_visibility_of_element(20)
+        chat_1.profile_send_message.wait_for_visibility_of_element(20)
         chat_1.back_button.click()
         chat_2.driver.quit()
 

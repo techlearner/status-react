@@ -507,9 +507,9 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         chat_view = home_view.get_chat_view()
         chat_view.chat_options.click_until_presence_of_element(chat_view.view_profile_button)
         chat_view.view_profile_button.click()
-        for text in basic_user['username'], 'Remove from contacts', 'Send message', 'Block this user':
-            if not chat_view.element_by_text(text).scroll_to_element():
-                self.errors.append('%s is not visible' % text)
+        for element in (chat_view.profile_block_contact, chat_view.remove_from_contacts, chat_view.profile_send_message):
+            if not element.is_element_displayed():
+                self.errors.append('Expected %s is not visible' % element.locator)
         self.errors.verify_no_errors()
 
     @marks.testrail_id(5368)

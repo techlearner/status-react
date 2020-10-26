@@ -352,7 +352,7 @@ class NoMessagesInChatText(BaseText):
 class ProfileSendMessageButton(BaseButton):
     def __init__(self, driver):
         super(ProfileSendMessageButton, self).__init__(driver)
-        self.locator = self.Locator.accessibility_id('start-conversation-button')
+        self.locator = self.Locator.accessibility_id('Chat-item-button')
 
     def navigate(self):
         return ChatView(self.driver)
