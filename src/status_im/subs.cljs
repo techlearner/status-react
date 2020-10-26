@@ -692,7 +692,7 @@
               :joined? true)
 
        (and (chat.models/community-chat? current-chat)
-            (communities/can-post? community my-public-key current-chat))
+            (communities/can-post? community my-public-key (:chat-id current-chat)))
        (assoc :show-input? true)
 
        (not group-chat)

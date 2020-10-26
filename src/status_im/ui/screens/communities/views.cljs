@@ -20,6 +20,34 @@
   (re-frame/dispatch [:bottom-sheet/hide])
   (re-frame/dispatch event))
 
+(defn community-channel-preview-list-item [{:keys [id identity]}]
+  [quo/list-item
+   {:icon                      [chat-icon.screen/chat-icon-view-chat-list
+                                id
+                                true
+                                (:display-name identity)
+                                ;; TODO: should be derived by id
+                                (or (:color identity)
+                                    (rand-nth colors/chat-colors))
+                                false
+                                false]
+    :title                     [react/view {:flex-direction :row
+                                            :flex           1}
+                                [react/view {:flex-direction :row
+                                             :flex           1
+                                             :padding-right  16
+                                             :align-items    :center}
+                                 [quo/text {:weight              :medium
+                                            :accessibility-label :community-name-text
+                                            :ellipsize-mode      :tail
+                                            :number-of-lines     1}
+                                  (utils/truncate-str (:display-name identity) 30)]]]
+    :title-accessibility-label :community-name-text
+    :subtitle                  [react/view {:flex-direction :row}
+                                [react/view {:flex 1}
+                                 [quo/text
+                                  (utils/truncate-str (:description identity) 30)]]]}])
+
 (defn community-list-item [{:keys [id description]}]
   (let [identity (:identity description)]
     [quo/list-item
@@ -57,12 +85,12 @@
     [react/view {:flex 1}
      [topbar/topbar {:title (i18n/label :t/communities)}]
      [react/scroll-view {:style                   {:flex 1}
-                         :content-container-style {:padding-vertical 8}}]
-     [list/flat-list
-      {:key-fn                       :id
-       :keyboard-should-persist-taps :always
-       :data                         (vals communities)
-       :render-fn                    (fn [community] [community-list-item community])}]
+                         :content-container-style {:padding-vertical 8}}
+      [list/flat-list
+       {:key-fn                       :id
+        :keyboard-should-persist-taps :always
+        :data                         (vals communities)
+        :render-fn                    (fn [community] [community-list-item community])}]]
      [toolbar/toolbar
       {:show-border? true
        :center [quo/button {:on-press #(re-frame/dispatch [::create-pressed])}
@@ -128,10 +156,11 @@
    ::community-channel-created
    ::failed-to-create-community-channel))
 
-(fx/defn invite-people-confirmatino-pressed
+(fx/defn invite-people-confirmation-pressed
   {:events [::invite-people-confirmation-pressed]}
   [cofx user-pk]
   (communities/invite-user
+   cofx
    @community-id
    user-pk
    ::people-invited
@@ -264,13 +293,13 @@
   (views/letsubs [chats [:chats/by-community-id id]]
     [home.views/chats-list-2 chats false nil true]))
 
-(defn community-channel-preview-list [chats]
+(defn community-channel-preview-list [_ chats]
   [react/view {:flex 1}
    [list/flat-list
     {:key-fn                       :chat-id
      :keyboard-should-persist-taps :always
      :data                         chats
-     :render-fn                    (fn [chat] [community-list-item chat])}]])
+     :render-fn                    (fn [chat] [community-channel-preview-list-item chat])}]])
 
 (views/defview community [route]
   (views/letsubs [{:keys [id description joined admin]} [:communities/community (get-in route [:route :params])]]
@@ -282,4 +311,9 @@
       admin]
      (if joined
        [community-channel-list id]
-       [community-channel-preview-list id (:chats description)])]))
+       [community-channel-preview-list id (map (fn [[k v]] (assoc v :id k)) (:chats description))])
+     (when-not joined
+       [react/view {:style {:padding-top 20
+                            :padding-horizontal 20}}
+        [quo/button {:on-press #(re-frame/dispatch [::communities/join id])}
+         (i18n/label :t/join)]])]))

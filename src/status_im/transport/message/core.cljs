@@ -4,6 +4,7 @@
             [status-im.chat.models :as models.chat]
             [status-im.chat.models.reactions :as models.reactions]
             [status-im.contact.core :as models.contact]
+            [status-im.communities.core :as models.communities]
             [status-im.pairing.core :as models.pairing]
             [status-im.data-store.messages :as data-store.messages]
             [status-im.data-store.reactions :as data-store.reactions]
@@ -23,6 +24,9 @@
 (fx/defn handle-message [cofx message]
   (models.message/receive-one cofx message))
 
+(fx/defn handle-community [cofx community]
+  (models.communities/handle-community cofx community))
+
 (fx/defn handle-reactions [cofx reactions]
   (models.reactions/receive-signal cofx reactions))
 
@@ -32,7 +36,8 @@
 (fx/defn process-response
   {:events [::process]}
   [cofx ^js response-js]
-  (let [^js chats (.-chats response-js)
+  (let [^js communities (.-communities response-js)
+        ^js chats (.-chats response-js)
         ^js contacts (.-contacts response-js)
         ^js installations (.-installations response-js)
         ^js messages (.-messages response-js)
@@ -53,6 +58,11 @@
                   {:utils/dispatch-later [{:ms 20 :dispatch [::process response-js]}]}
                   (handle-contacts (map data-store.contacts/<-rpc contacts-clj))))
 
+      (seq communities)
+      (let [community (.pop communities)]
+        (fx/merge cofx
+                  {:utils/dispatch-later [{:ms 20 :dispatch [::process response-js]}]}
+                  (handle-community (types/js->clj community))))
       (seq chats)
       (let [chats-clj (types/js->clj chats)]
         (js-delete response-js "chats")

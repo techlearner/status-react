@@ -16,6 +16,7 @@
 (def content-type-system-text 6)
 (def content-type-image 7)
 (def content-type-audio 8)
+(def content-type-community 9)
 
 (def emoji-reaction-love 1)
 (def emoji-reaction-thumbs-up  2)
@@ -66,7 +67,7 @@
 
 (def system "system")
 
-(def mainnet-rpc-url "https://eth-mainnet.gateway.pokt.network/v1/5f8fee9fb90218002e9cea56")
+(def mainnet-rpc-url (str "https://mainnet.infura.io/v3/" config/INFURA_TOKEN))
 
 (def mainnet-networks
   [{:id             "mainnet_rpc",

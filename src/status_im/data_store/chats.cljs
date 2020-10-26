@@ -77,7 +77,7 @@
       rpc->type
       unmarshal-members
       (clojure.set/rename-keys {:id :chat-id
-                                :organisationId :community-id
+                                :communityId :community-id
                                 :membershipUpdateEvents :membership-update-events
                                 :deletedAtClockValue :deleted-at-clock-value
                                 :chatType :chat-type

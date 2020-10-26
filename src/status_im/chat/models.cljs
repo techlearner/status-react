@@ -93,6 +93,7 @@
     {:chat-id            chat-id
      :name               (or name "")
      :color              (rand-nth colors/chat-colors)
+     :chat-type          constants/one-to-one-chat-type
      :group-chat         false
      :is-active          true
      :timestamp          now
