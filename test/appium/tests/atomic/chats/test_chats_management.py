@@ -561,9 +561,8 @@ class TestChatManagementMultipleDevice(MultipleDeviceTestCase):
         chat_element.member_photo.click()
         for element in [chat_1.contact_profile_picture,
                         chat_1.element_by_text(username_2, 'text'),
-                        chat_1.add_to_contacts,
+                        chat_1.profile_add_to_contacts,
                         chat_1.profile_send_message,
-                        chat_1.profile_address_text,
                         chat_1.profile_nickname]:
             if not element.scroll_to_element():
                 self.errors.append('%s is not visible' % element.name)
@@ -580,7 +579,7 @@ class TestChatManagementMultipleDevice(MultipleDeviceTestCase):
 
         device_1.just_fyi('Add user to contacts, mention it by nickname check contact list in Profile')
         chat_element.member_photo.click()
-        chat_1.add_to_contacts.click()
+        chat_1.profile_add_to_contacts.click()
         if not chat_1.remove_from_contacts.is_element_displayed():
              self.errors.append("'Add to contacts' is not changed to 'Remove from contacts'")
         chat_1.back_button.click()

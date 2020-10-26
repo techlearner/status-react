@@ -144,10 +144,16 @@ class ProfileDetailsOtherUser(BaseButton):
         self.locator = self.Locator.accessibility_id('profile-public-key')
 
 
-class ProfileNicknameOtherUser(BaseButton):
+class ProfileNicknameOtherUser(BaseElement):
     def __init__(self, driver):
         super(ProfileNicknameOtherUser, self).__init__(driver)
         self.locator = self.Locator.xpath_selector('//*[@content-desc="profile-nickname-item"]/android.widget.TextView[2]')
+
+
+class ProfileNicknameOtherUserButton(BaseElement):
+    def __init__(self, driver):
+        super(ProfileNicknameOtherUserButton, self).__init__(driver)
+        self.locator = self.Locator.accessibility_id('profile-nickname-item')
 
 
 class NicknameInputOtherUser(BaseEditBox):
@@ -804,6 +810,8 @@ class ChatView(BaseView):
         self.profile_add_to_contacts = ProfileAddToContactsButton(self.driver)
         self.profile_details = ProfileDetailsOtherUser(self.driver)
         self.profile_nickname = ProfileNicknameOtherUser(self.driver)
+        self.profile_nickname_button = ProfileNicknameOtherUserButton(self.driver)
+
         self.nickname_input_field = NicknameInputOtherUser(self.driver)
 
     def delete_chat(self):
@@ -965,7 +973,7 @@ class ChatView(BaseView):
         self.block_contact_button.click()
 
     def set_nickname(self, nickname):
-        self.profile_nickname.click()
+        self.profile_nickname_button.click()
         self.nickname_input_field.send_keys(nickname)
         self.element_by_text('Done').click()
 

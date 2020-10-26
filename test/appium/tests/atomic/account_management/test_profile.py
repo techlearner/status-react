@@ -1142,18 +1142,16 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
             self.errors.append('ENS username is not shown in public chat')
 
         home_2.just_fyi('check that can mention user with ENS name')
-        # chat_2.chat_message_input.send_keys('@' + user_1['username'][0:4])
-        # chat_2.search_user_in_mention_suggestion_list(user_1['ens']).click()
         chat_2.select_mention_from_suggestion_list(user_1['ens'])
         if chat_2.chat_message_input.text != ens_name + ' ':
             self.errors.append('ENS username is not resolved in chat input after selecting it in mention suggestions list!')
         chat_2.send_message_button.click()
         chat_2.element_starts_with_text(ens_name,'button').click()
-        for element in (chat_2.element_by_text(user_1['username']), chat_2.add_to_contacts):
+        for element in (chat_2.element_by_text(user_1['username']), chat_2.profile_add_to_contacts):
             if not element.is_element_displayed():
-                self.errors.append('Was not redirected to user profile after tappin on mention!')
+                self.errors.append('Was not redirected to user profile after tapping on mention!')
         chat_1.element_starts_with_text(user_1['ens'] +'.stateofus.eth','button').click()
-        if not profile_1.contacts_button.is_element_displayed():
+        if not profile_1.settings_button.is_element_displayed():
                 self.errors.append('Was not redirected to own profile after tapping on mention of myself from another user!')
 
         home_2.just_fyi('check that ENS name is shown in 1-1 chat without adding user as contact in header, profile, options')
@@ -1169,6 +1167,7 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
 
         home_2.just_fyi('add user to contacts and check that ENS name is shown in contact')
         chat_2_one_to_one.profile_add_to_contacts.click()
+        chat_2.back_button.click()
         profile_2 = chat_2_one_to_one.profile_button.click()
         profile_2.open_contact_from_profile(ens_name)
 
@@ -1180,9 +1179,6 @@ class TestProfileMultipleDevice(MultipleDeviceTestCase):
             if not profile_2.element_by_text(name).is_element_displayed():
                 self.errors.append('%s is not shown in contact list' % name)
         profile_2.home_button.click()
-        if not chat_2_one_to_one.element_by_text(nickname).is_element_displayed():
-            self.errors.append('Nickname for user with ENS is not shown in user profile')
-        chat_2.back_button.click()
         if chat_2_one_to_one.user_name_text.text != nickname:
             self.errors.append('Nickname for user with ENS is not shown in 1-1 chat header')
         chat_2_one_to_one.chat_options.click()
