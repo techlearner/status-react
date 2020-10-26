@@ -28,7 +28,7 @@
        (when show-close?
          [react/touchable-highlight {:on-press            #(re-frame/dispatch [:chat.ui/cancel-sending-image])
                                      :accessibility-label :cancel-send-image
-                                     :style               {:left (- (first @dimensions) 28) :top 4 :position :absolute}}
+                                     :style               {:left (- (first @dimensions) 28) :top 12 :position :absolute}}
           [react/view {:width         24 :height 24 :background-color colors/black-persist
                        :border-radius 12 :align-items :center :justify-content :center}
            [icons/icon :main-icons/close-circle {:color colors/white-persist}]]])])))
@@ -36,7 +36,8 @@
 (defn image-message [{:keys [content] :as message}]
   [react/touchable-highlight {:on-press      (fn [_]
                                                (when (:image content)
-                                                 (re-frame/dispatch [:navigate-to :image-preview message]))
+                                                 (re-frame/dispatch [:navigate-to :image-preview
+                                                                     (assoc message :cant-be-replied true)]))
                                                (react/dismiss-keyboard!))}
    [message-content-image (:image content) false]])
 

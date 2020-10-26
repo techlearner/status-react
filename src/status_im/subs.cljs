@@ -814,7 +814,7 @@
 
 (re-frame/reg-sub
  :chats/sending-image
- :<- [:chats/current-chat]
+ :<- [:chats/current-raw-chat]
  (fn [{:keys [metadata]}]
    (get-in metadata [:sending-image])))
 
