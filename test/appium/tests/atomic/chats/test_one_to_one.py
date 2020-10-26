@@ -916,7 +916,8 @@ class TestMessagesOneToOneChatSingle(SingleDeviceTestCase):
         for key in url_data:
             home_view.plus_button.click_until_presence_of_element(home_view.start_new_chat_button)
             sign_in_view.just_fyi('Checking %s case' % key)
-            home_view.universal_qr_scanner_button.click()
+            if home_view.universal_qr_scanner_button.is_element_displayed():
+                home_view.universal_qr_scanner_button.click()
             if home_view.allow_button.is_element_displayed():
                 home_view.allow_button.click()
             home_view.enter_qr_edit_box.set_value(url_data[key]['url'])

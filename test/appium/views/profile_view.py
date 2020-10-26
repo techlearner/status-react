@@ -52,7 +52,7 @@ class AddNewContactButton(BaseButton):
 
     def __init__(self, driver):
         super(AddNewContactButton, self).__init__(driver)
-        self.locator = self.Locator.accessibility_id('add-new-contact-button')
+        self.locator = self.Locator.text_selector('Add contact')
 
     def navigate(self):
         from views.contacts_view import ContactsView

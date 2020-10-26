@@ -326,7 +326,7 @@ class TestChatManagement(SingleDeviceTestCase):
         home.just_fyi("Denying access to camera in send transaction > scan address view")
         wallet.accounts_status_account.click()
         send_transaction = wallet.send_transaction_button.click()
-        send_transaction.chose_recipient_button.click()
+        send_transaction.chose_recipient_button.scroll_and_click()
         send_transaction.scan_qr_code_button.click()
         send_transaction.deny_button.click()
         send_transaction.element_by_text(camera_access_error_text).wait_for_visibility_of_element(3)

@@ -387,9 +387,8 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         profile.switch_network()
         home.profile_button.click()
         profile.contacts_button.click()
-        for element in [profile.invite_friends_in_contact_button, profile.add_new_contact_button]:
-            if not element.is_element_displayed():
-                self.driver.fail('No expected element on contacts view')
+        if not profile.add_new_contact_button.is_element_displayed():
+            self.driver.fail('No expected element on contacts view')
 
         users = {
             'scanning_ens_with_stateofus_domain_deep_link': {
@@ -411,7 +410,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
 
         }
 
-        home.just_fyi('Add contactx  and check that they appear in Contacts view')
+        home.just_fyi('Add contact  and check that they appear in Contacts view')
         for key in users:
             contact_view = profile.add_new_contact_button.click()
             sign_in_view.just_fyi('Checking %s case' % key)
@@ -639,6 +638,7 @@ class TestProfileSingleDevice(SingleDeviceTestCase):
         sign_in_view = SignInView(self.driver)
         home_view = sign_in_view.create_user()
         profile_view = home_view.profile_button.click()
+        profile_view.settings_button.click()
         profile_view.about_button.click()
         app_version = profile_view.app_version_text.text
         node_version = profile_view.node_version_text.text

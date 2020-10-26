@@ -141,7 +141,7 @@ class ImageInRecentInGalleryElement(BaseElement):
 class ProfileDetailsOtherUser(BaseButton):
     def __init__(self, driver):
         super(ProfileDetailsOtherUser, self).__init__(driver)
-        self.locator = self.Locator.accessibility_id('profile-public-key')
+        self.locator = self.Locator.accessibility_id('share-button')
 
 
 class ProfileNicknameOtherUser(BaseElement):
