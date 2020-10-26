@@ -20,11 +20,12 @@
          (let [k (/ (max width height) 260)]
            (reset! dimensions [(/ width k) (/ height k)]))))
       [react/view
-       [react/image {:style       {:width        (first @dimensions) :height (last @dimensions)
-                                   :border-width 1 :border-color colors/black-transparent
-                                   :overflow     :hidden :border-radius 16 :margin-top 8}
-                     :resize-mode :contain
-                     :source      {:uri uri}}]
+       [react/view {:style       {:width        (first @dimensions) :height (last @dimensions)
+                                  :border-width 1 :border-color colors/black-transparent
+                                  :overflow     :hidden :border-radius 16 :margin-top 8}}
+        [react/image {:style       {:width        (first @dimensions) :height (last @dimensions)}
+                      :resize-mode :contain
+                      :source      {:uri uri}}]]
        (when show-close?
          [react/touchable-highlight {:on-press            #(re-frame/dispatch [:chat.ui/cancel-sending-image])
                                      :accessibility-label :cancel-send-image

@@ -15,7 +15,6 @@
   [stack {:initial-route-name :home
           :header-mode        :none}
    [{:name      :home
-     :on-focus  [::chat.models/offload-all-messages]
      :style     {:padding-bottom tabbar.styles/tabs-diff}
      :component home/home}
     {:name      :chat

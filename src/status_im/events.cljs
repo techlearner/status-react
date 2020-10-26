@@ -1271,7 +1271,7 @@
                 :keycard-login-pin (keycard/enter-pin-screen-did-load %)
                 :add-new-account-pin (keycard/enter-pin-screen-did-load %)
                 :keycard-authentication-method (keycard/authentication-method-screen-did-load %)
-                :chat (reset-current-chat % (get db :inactive-chat-id))
+                (:chat :group-chat-profile) (reset-current-chat % (get db :inactive-chat-id))
                 :multiaccounts (keycard/multiaccounts-screen-did-load %)
                 (:wallet-stack :wallet) (wallet.events/wallet-will-focus %)
                 (:my-profile :profile-stack)
