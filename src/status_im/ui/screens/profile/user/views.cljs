@@ -221,7 +221,8 @@
           {:keys [tab]} @state]
       [react/view {:flex 1}
        [quo/animated-header
-        {:right-accessories [{:icon     :main-icons/share
+        {:right-accessories [{:accessibility-label :share-header-button
+                              :icon     :main-icons/share
                               :on-press on-share}]
          :use-insets        true
          :extended-header   (profile-header/extended-header
